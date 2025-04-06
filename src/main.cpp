@@ -1,4 +1,4 @@
-#define GLFW_INCLUDE_NONE
+#define GLFW_INCLUDE_GL3
 #include <GLFW/glfw3.h>
 #include <iostream>
 
@@ -20,9 +20,13 @@ int main() {
     }
 
     glfwMakeContextCurrent(win);
+    glClearColor(1,0,0,1);
 
     while (!glfwWindowShouldClose(win)) {
         glfwPollEvents();
+
+        glClear(GL_COLOR_BUFFER_BIT);
+
         glfwSwapBuffers(win);
     }
 
