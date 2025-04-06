@@ -13,29 +13,29 @@
  - GLFW - window management
  - libPNG - image loading library
 
-### How to play?
+### How to build/play?
 
  1. Clone this repository  
- ```sh 
+ ```shell
   git clone --depth=1 https://github.com/maksmakuta/tetrablocks.git && cd tetrablocks 
   ```
 
  2. Make temporary dir for building   
- ```sh
+ ```shell
  mkdir build && cd build
  ```  
  
  3. Use CMake to generate build script     
- ```sh
+ ```shell
  cmake .. 
  ```  
  
  4. Run build script 
- ```sh
+ ```shell
   make 
   ```  
  5. Run executable     
- ```sh
+ ```shell
   ./tetrablocks 
  ```
     
