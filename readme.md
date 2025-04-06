@@ -15,16 +15,16 @@
 
 ### How to play?
 
- 1. Clone this repository  
- ``` git clone --depth=1 https://github.com/maksmakuta/tetrablocks.git && cd tetrablocks ```
- 2. Make temporary dir for building  
- ``` mkdir build && cd build```
- 3. Use CMake to generate build script  
- ``` cmake .. ```
- 4. Run build script  
- ``` make ```
- 5. Run executable  
- ``` ./tetrablocks ```
+  Clone this repository  
+ ```shell git clone --depth=1 https://github.com/maksmakuta/tetrablocks.git && cd tetrablocks ```
+ Make temporary dir for building   
+ ```shell mkdir build && cd build```  
+ Use CMake to generate build script     
+ ```shell cmake .. ```  
+ Run build script     
+ ```shell make ```  
+ Run executable     
+ ```shell ./tetrablocks   ```
     
 ### Author and Licenses
  Maks Makuta (c) 2025  
