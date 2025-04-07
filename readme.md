@@ -18,6 +18,8 @@
 
  - [ ] Rendering
    - [X] Text 
+   - [ ] Images
+     - [ ] With tint support
    - [ ] UI 
      - [ ] Main Menu
      - [ ] Pause Menu
@@ -59,10 +61,11 @@
 ![](/screenshots/img.png)
 
 ### Author and Licenses
- 
+
+ Maks Makuta (c) 2025   
+
  | Item                                                      | License  |  
  |-----------------------------------------------------------|----------|  
  | Code                                                      | MIT      |
  | [Font](https://www.fontspace.com/timeburner-font-f15111)  | Freeware |
 
- Maks Makuta (c) 2025  
