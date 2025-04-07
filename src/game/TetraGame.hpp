@@ -22,9 +22,10 @@ namespace tetrablocks::game {
         void onCursor(float x, float y);
         void onKey(int k, int a, int m);
     private:
+        render::TextRenderer m_texter;
         glm::mat4 m_proj{1.f};
         glm::vec2 m{0};
-        render::TextRenderer m_texter;
+        float fps{0.f};
     };
 
 }

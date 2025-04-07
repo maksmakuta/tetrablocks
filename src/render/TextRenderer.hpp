@@ -11,8 +11,13 @@
 namespace tetrablocks::render {
 
     struct TextVertex {
-        glm::vec2 pos;
-        glm::vec2 tex;
+        uint pos;
+        uint tex;
+
+        TextVertex(const glm::vec2& p, const glm::vec2& t) {
+            pos = static_cast<uint>(p.y) << 16 | static_cast<uint>(p.x);
+            tex = static_cast<uint>(t.y* UINT16_MAX) << 16 | static_cast<uint>(t.x * UINT16_MAX);
+        }
     };
 
     class TextRenderer {

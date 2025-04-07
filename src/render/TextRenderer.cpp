@@ -24,9 +24,9 @@ namespace tetrablocks::render {
         glBindVertexArray(m_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
         glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(TextVertex), static_cast<void *>(nullptr));
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+        glVertexAttribIPointer(1, 1, GL_UNSIGNED_INT, sizeof(TextVertex), reinterpret_cast<void *>((offsetof(TextVertex, tex))));
         glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -40,28 +40,27 @@ namespace tetrablocks::render {
     }
 
     void TextRenderer::text(const std::string &text, const glm::vec2 &pos) {
-        glm::vec2 p = pos;
+        glm::ivec2 p = pos;
         for (const auto& c : text) {
             if (const auto glyph = m_font[c]; glyph) {
-                constexpr float scale = 2.f;
-                const float x = p.x + static_cast<float>(glyph->offset.x) * scale;
-                const float y = p.y - static_cast<float>(glyph->offset.y) * scale;
 
-                const float w = static_cast<float>(glyph->size.x) * scale;
-                const float h = static_cast<float>(glyph->size.y) * scale;
+                const uint x = p.x + glyph->offset.x;
+                const uint y = p.y - glyph->offset.y;
+                const auto w = glyph->size.x;
+                const auto h = glyph->size.y;
 
                 const auto vertices = std::vector<TextVertex>{
                     { {x,     y + h},   {glyph->uv_a.x,glyph->uv_b.y} },
-                    { {x,     y},       {glyph->uv_a.x,glyph->uv_a.y} },
-                    { {x + w, y},       {glyph->uv_b.x,glyph->uv_a.y} },
+                    { {x,     y    },   {glyph->uv_a.x,glyph->uv_a.y} },
+                    { {x + w, y    },   {glyph->uv_b.x,glyph->uv_a.y} },
 
                     { {x,     y + h},   {glyph->uv_a.x,glyph->uv_b.y} },
-                    { {x + w, y    },    {glyph->uv_b.x,glyph->uv_a.y} },
+                    { {x + w, y    },   {glyph->uv_b.x,glyph->uv_a.y} },
                     { {x + w, y + h},   {glyph->uv_b.x,glyph->uv_b.y} }
                 };
 
                 m_data.insert(m_data.end(),vertices.begin(), vertices.end());
-                p.x += static_cast<float>(glyph->advance) * scale;
+                p.x += glyph->advance;
             }
         }
     }
