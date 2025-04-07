@@ -1,8 +1,9 @@
 # TetraBlocks
 
- Simple block placing game inspired by tetris.  
- Player can place shapes in any available place on grid (9x9 blocks).  
- If horizontal or vertical line is filled - it's disappears and player gain points.
+ Simple block placing game inspired by tetris and some popular games for mobile devices.  
+ Player can place shapes (tetrominoes) in any available place on grid (9x9 blocks).  
+ If horizontal and/or vertical line is filled - it's disappears and player gain points.
+ If any shape can't fit board - game ends.
  
 ### Used technologies
 
@@ -12,6 +13,20 @@
  - Freetype - text rendering library
  - GLFW - window management
  - libPNG - image loading library
+
+### Features
+
+ - [ ] Rendering
+   - [X] Text 
+   - [ ] UI 
+     - [ ] Main Menu
+     - [ ] Pause Menu
+     - [ ] Game
+ - [ ] Game logic
+   - [ ] Shapes generation
+   - [ ] Drag&Drop mechanism for shapes
+   - [ ] Check if board have space for shapes
+   - [ ] Score system
 
 ### How to build/play?
 
@@ -43,8 +58,11 @@
 
 ![](/screenshots/img.png)
 
-Rendering font texture atlas generated in runtime
-
 ### Author and Licenses
+ 
+ | Item                                                      | License  |  
+ |-----------------------------------------------------------|----------|  
+ | Code                                                      | MIT      |
+ | [Font](https://www.fontspace.com/timeburner-font-f15111)  | Freeware |
+
  Maks Makuta (c) 2025  
- MIT Licence

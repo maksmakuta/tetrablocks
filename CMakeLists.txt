@@ -31,6 +31,12 @@ add_executable(tetrablocks
         src/utils/Assets.hpp
 
         src/main.cpp
+        src/game/models/Board.cpp
+        src/game/models/Board.hpp
+        src/game/models/Shape.cpp
+        src/game/models/Shape.hpp
+        src/render/ShapeRenderer.cpp
+        src/render/ShapeRenderer.hpp
 )
 
 target_include_directories(tetrablocks PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
