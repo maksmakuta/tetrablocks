@@ -3,6 +3,7 @@
 
 #include <glm/mat4x4.hpp>
 
+#include "graphics/Font.hpp"
 #include "graphics/Shader.hpp"
 
 namespace tetrablocks::game {
@@ -23,6 +24,7 @@ namespace tetrablocks::game {
         glm::uint m_VAO{0}, m_VBO{0};
         glm::mat4 m_proj{1.f};
         graphics::Shader m_shader;
+        graphics::Font m_font;
     };
 
 }

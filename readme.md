@@ -39,6 +39,12 @@
   ./tetrablocks 
  ```
     
+### Current screenshot
+
+![](/screenshots/img.png)
+
+Rendering font texture atlas generated in runtime
+
 ### Author and Licenses
  Maks Makuta (c) 2025  
  MIT Licence
