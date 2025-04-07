@@ -34,11 +34,13 @@ namespace tetrablocks::graphics {
             side *= 2;
         }
 
+        const glm::vec2 atlas{static_cast<float>(side)};
+
         m_texture.alloc(side,side,TextureFormat::Mono,nullptr);
 
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        glm::ivec2 off{0,0};
+        glm::ivec2 off{1,1};
         int height = -1;
 
         for (unsigned char c = startIndex; c < endIndex; c++){
@@ -48,7 +50,7 @@ namespace tetrablocks::graphics {
             }
 
             if (off.x + face->glyph->bitmap.width > side) {
-                off.x = 0;
+                off.x = 1;
                 off.y += height + 1;
                 height = -1;
             }
@@ -62,21 +64,21 @@ namespace tetrablocks::graphics {
                 face->glyph->bitmap.buffer
             );
 
-            Glyph character{
-                glm::uvec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                static_cast<uint>(face->glyph->advance.x >> 6),
-                {},{}
-            };
+            Glyph character{};
+            character.size = glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
+            character.offset = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top);
+            character.advance = static_cast<uint>(face->glyph->advance.x >> 6);
+            character.uv_a = glm::vec2(off) / atlas;
+            character.uv_b = glm::vec2(off + glm::ivec2(character.size)) / atlas;
 
             m_glyphs.insert_or_assign(c,character);
 
             off.x += static_cast<int>(face->glyph->bitmap.width) + 1;
             height = std::max<int>(height,static_cast<int>(face->glyph->bitmap.rows));
-
-            std::cout << std::format("[{}] -> ({},{})\n", char(c), off.x, off.y);
         }
 
+        m_texture.setMagFilter(TextureFilter::Linear);
+        m_texture.setMinFilter(TextureFilter::Nearest);
         m_texture.genMipmaps();
 
         FT_Done_Face(face);

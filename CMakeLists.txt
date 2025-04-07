@@ -24,6 +24,9 @@ add_executable(tetrablocks
         src/graphics/Texture.cpp
         src/graphics/Texture.hpp
 
+        src/render/TextRenderer.cpp
+        src/render/TextRenderer.hpp
+
         src/utils/Assets.cpp
         src/utils/Assets.hpp
 

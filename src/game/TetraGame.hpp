@@ -5,6 +5,7 @@
 
 #include "graphics/Font.hpp"
 #include "graphics/Shader.hpp"
+#include "render/TextRenderer.hpp"
 
 namespace tetrablocks::game {
 
@@ -21,10 +22,9 @@ namespace tetrablocks::game {
         void onCursor(float x, float y);
         void onKey(int k, int a, int m);
     private:
-        glm::uint m_VAO{0}, m_VBO{0};
         glm::mat4 m_proj{1.f};
-        graphics::Shader m_shader;
-        graphics::Font m_font;
+        glm::vec2 m{0};
+        render::TextRenderer m_texter;
     };
 
 }
