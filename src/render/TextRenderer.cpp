@@ -37,6 +37,8 @@ namespace tetrablocks::render {
         m_shader.clear();
         m_font.clear();
         m_data.clear();
+        glDeleteVertexArrays(1,&m_VAO);
+        glDeleteBuffers(1,&m_VBO);
     }
 
     void TextRenderer::text(const std::string &text, const glm::vec2 &pos) {
