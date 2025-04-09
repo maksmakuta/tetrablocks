@@ -2,10 +2,14 @@
 #define CANVAS_HPP
 
 #include <string>
+#include <vector>
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 
 #include "Color.hpp"
+#include "Font.hpp"
+#include "Path.hpp"
+#include "Shader.hpp"
 #include "Texture.hpp"
 
 namespace tetrablocks::graphics {
@@ -30,6 +34,7 @@ namespace tetrablocks::graphics {
         void clear();
         void draw();
 
+        void background(const Color&);
         void resize(const glm::vec2&);
 
         //drawing settings
@@ -44,16 +49,24 @@ namespace tetrablocks::graphics {
         void rect(const glm::vec2& a,const glm::vec2& b, float r);
         void circle(const glm::vec2& c, float r);
         void ellipse(const glm::vec2& c,const glm::vec2& r);
-        void arc(const glm::vec2& c, float r);
-        void pie(const glm::vec2& c,const glm::vec2& r);
+        void arc(const glm::vec2& c,const glm::vec2& r, const glm::vec2& a);
+        void pie(const glm::vec2& c,const glm::vec2& r, const glm::vec2& a);
+
+        void draw(const Path& path);
 
         /**
          * text function don't inherit drawing settings
+         * @param fnt : Font - font data
          * @param text : std::string - text to draw
          * @param pos : glm::vec2 - text position
          * @param align : Align - text horizontal alignment
          */
-        void text(const std::string& text, const glm::vec2& pos, Align align = Align::Start);
+        void text(const Font& fnt,const std::string& text, const glm::vec2& pos, Align align = Align::Start);
+    private:
+        std::vector<Vertex> m_vertices;
+        glm::mat4 matrix{1.f};
+        Shader m_shader;
+        uint VBO{0}, VAO{0};
     };
 
 }

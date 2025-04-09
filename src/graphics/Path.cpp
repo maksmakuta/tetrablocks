@@ -7,7 +7,7 @@ namespace tetrablocks::graphics {
     Path::Path(const Path& p) = default;
 
     void Path::moveTo(const glm::vec2& p) {
-        if (m_data.back() != PATH_END) {
+        if (m_data.back() != PATH_END && !m_data.empty()) {
             end();
         }
         m_data.push_back(p);

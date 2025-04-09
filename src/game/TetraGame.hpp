@@ -1,10 +1,7 @@
 #ifndef TETRAGAME_HPP
 #define TETRAGAME_HPP
 
-#include <glm/mat4x4.hpp>
-
-#include "graphics/Font.hpp"
-#include "graphics/Shader.hpp"
+#include "graphics/Canvas.hpp"
 
 namespace tetrablocks::game {
 
@@ -17,12 +14,12 @@ namespace tetrablocks::game {
         void draw();
         void update(float delta);
 
+        void onCanvas(graphics::Canvas& canvas);
         void onResize(int w, int h);
         void onCursor(float x, float y);
         void onKey(int k, int a, int m);
     private:
-        glm::mat4 m_proj{1.f};
-        glm::vec2 m{0};
+        graphics::Canvas m_canvas;
     };
 
 }
