@@ -10,6 +10,12 @@
 
 namespace tetrablocks::graphics {
 
+    struct Vertex {
+        glm::vec2 pos;
+        glm::vec2 tex;
+        glm::vec3 col;
+    };
+
     enum class Align : uint8_t{
         Center,
         Start,
@@ -22,7 +28,9 @@ namespace tetrablocks::graphics {
 
         void init();
         void clear();
-        void draw(const glm::mat4& proj);
+        void draw();
+
+        void resize(const glm::vec2&);
 
         //drawing settings
         void fill(const Color&);

@@ -17,8 +17,8 @@
 ### Features
 
  - [ ] Rendering
-   - [X] Text 
-   - [X] Vector shapes
+   - [ ] Text 
+   - [ ] Vector shapes
    - [ ] Images
      - [ ] With tint support
    - [ ] UI 
