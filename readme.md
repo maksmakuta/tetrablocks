@@ -18,6 +18,7 @@
 
  - [ ] Rendering
    - [X] Text 
+   - [X] Vector shapes
    - [ ] Images
      - [ ] With tint support
    - [ ] UI 

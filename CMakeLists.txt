@@ -11,32 +11,32 @@ find_package(glm REQUIRED)
 find_package(PNG REQUIRED)
 
 add_executable(tetrablocks
+
+        src/game/enums/GameState.hpp
+
+        src/game/models/Board.cpp
+        src/game/models/Board.hpp
+        src/game/models/Shape.cpp
+        src/game/models/Shape.hpp
+
         src/game/TetraGame.cpp
         src/game/TetraGame.hpp
 
         src/graphics/gl/gl.c
         src/graphics/gl/gl.h
         src/graphics/gl/khrplatform.h
+        src/graphics/Color.cpp
+        src/graphics/Color.hpp
         src/graphics/Font.cpp
         src/graphics/Font.hpp
         src/graphics/Shader.cpp
         src/graphics/Shader.hpp
         src/graphics/Texture.cpp
         src/graphics/Texture.hpp
-
-        src/render/TextRenderer.cpp
-        src/render/TextRenderer.hpp
-
         src/utils/Assets.cpp
         src/utils/Assets.hpp
 
         src/main.cpp
-        src/game/models/Board.cpp
-        src/game/models/Board.hpp
-        src/game/models/Shape.cpp
-        src/game/models/Shape.hpp
-        src/render/ShapeRenderer.cpp
-        src/render/ShapeRenderer.hpp
 )
 
 target_include_directories(tetrablocks PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")

@@ -5,8 +5,6 @@
 
 #include "graphics/Font.hpp"
 #include "graphics/Shader.hpp"
-#include "render/ShapeRenderer.hpp"
-#include "render/TextRenderer.hpp"
 
 namespace tetrablocks::game {
 
@@ -23,11 +21,8 @@ namespace tetrablocks::game {
         void onCursor(float x, float y);
         void onKey(int k, int a, int m);
     private:
-        render::TextRenderer m_texter;
-        render::ShapeRenderer m_shaper;
         glm::mat4 m_proj{1.f};
         glm::vec2 m{0};
-        float fps{0.f};
     };
 
 }
