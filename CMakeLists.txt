@@ -25,22 +25,22 @@ add_executable(tetrablocks
         src/graphics/gl/gl.c
         src/graphics/gl/gl.h
         src/graphics/gl/khrplatform.h
+        src/graphics/Canvas.cpp
+        src/graphics/Canvas.hpp
         src/graphics/Color.cpp
         src/graphics/Color.hpp
         src/graphics/Font.cpp
         src/graphics/Font.hpp
         src/graphics/Shader.cpp
         src/graphics/Shader.hpp
+        src/graphics/Path.cpp
+        src/graphics/Path.hpp
         src/graphics/Texture.cpp
         src/graphics/Texture.hpp
         src/utils/Assets.cpp
         src/utils/Assets.hpp
 
         src/main.cpp
-        src/graphics/Path.cpp
-        src/graphics/Path.hpp
-        src/graphics/Canvas.cpp
-        src/graphics/Canvas.hpp
 )
 
 target_include_directories(tetrablocks PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")

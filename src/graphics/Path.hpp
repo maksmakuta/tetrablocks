@@ -11,6 +11,8 @@ namespace tetrablocks::graphics {
         Path() = default;
         Path(const Path&);
 
+        explicit Path(const std::vector<glm::vec2>&);
+
         void moveTo(const glm::vec2&);
         void lineTo(const glm::vec2&);
         void end();

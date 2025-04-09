@@ -34,6 +34,9 @@ namespace tetrablocks::graphics {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<int>(m_vertices.size() * sizeof(Vertex)), m_vertices.data(), GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(m_vertices.size()));
     }
 
@@ -51,42 +54,33 @@ namespace tetrablocks::graphics {
         if (!m_vertices.empty()) {
             draw();
         }
+        //TODO(fill)
     }
 
     void Canvas::fill(const Texture&, const glm::vec4& uv) {
         if (!m_vertices.empty()) {
             draw();
         }
+        //TODO(fill)
     }
 
     void Canvas::stroke(const Color&, float w) {
         if (!m_vertices.empty()) {
             draw();
         }
+        //TODO(stroke)
     }
 
     void Canvas::line(const glm::vec2& a,const glm::vec2& b) {
-        Path temp;
-        temp.moveTo(a);
-        temp.lineTo(b);
-        draw(temp);
+        draw(Path({a,b}));
     }
 
     void Canvas::triangle(const glm::vec2& a,const glm::vec2& b,const glm::vec2& c) {
-        Path temp;
-        temp.moveTo(a);
-        temp.lineTo(b);
-        temp.lineTo(c);
-        draw(temp);
+        draw(Path({a,b,c}));
     }
 
     void Canvas::quad(const glm::vec2& a,const glm::vec2& b,const glm::vec2& c,const glm::vec2& d) {
-        Path temp;
-        temp.moveTo(a);
-        temp.lineTo(b);
-        temp.lineTo(c);
-        temp.lineTo(d);
-        draw(temp);
+        draw(Path({a,b,c,d}));
     }
 
     void Canvas::rect(const glm::vec2& a,const glm::vec2& b) {
@@ -138,14 +132,14 @@ namespace tetrablocks::graphics {
     }
 
     void Canvas::draw(const Path &path) {
-
+        //TODO(draw path)
     }
 
     void Canvas::text(const Font& fnt,const std::string& text, const glm::vec2& pos, Align align) {
         if (!m_vertices.empty()) {
             draw();
         }
-
+        //TODO(text)
         draw();
     }
 
