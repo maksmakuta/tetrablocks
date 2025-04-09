@@ -34,6 +34,7 @@ namespace tetrablocks::graphics {
         void clear();
         void draw();
 
+        void blank();
         void background(const Color&);
         void resize(const glm::vec2&);
 
@@ -64,9 +65,15 @@ namespace tetrablocks::graphics {
         void text(const Font& fnt,const std::string& text, const glm::vec2& pos, Align align = Align::Start);
     private:
         std::vector<Vertex> m_vertices;
-        glm::mat4 matrix{1.f};
+        glm::mat4 m_matrix{1.f};
+        glm::vec4 m_uv{0,0,1,1};
+        glm::vec3 m_color{1,1,1};
         Shader m_shader;
+        float m_thickness{0.f};
+        int m_texture_id{-1};
         uint VBO{0}, VAO{0};
+        uint8_t m_type = 1;
+        bool m_stroke{false};
     };
 
 }

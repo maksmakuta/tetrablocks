@@ -92,7 +92,7 @@ namespace tetrablocks::graphics {
         m_size = 0;
     }
 
-    std::optional<Glyph> Font::operator[](const uint code) {
+    std::optional<Glyph> Font::operator[](const uint code) const {
         if (m_glyphs.contains(code)) {
             return m_glyphs.at(code);
         }

@@ -1,10 +1,10 @@
 #include "Path.hpp"
 
+#include <iostream>
+
 namespace tetrablocks::graphics {
 
     constexpr auto PATH_END = glm::vec2{std::numeric_limits<float>::infinity()};
-
-    Path::Path(const Path& p) = default;
 
     Path::Path(const std::vector<glm::vec2>& vec) : m_data(vec){}
 
@@ -25,5 +25,13 @@ namespace tetrablocks::graphics {
 
     std::size_t Path::length() const {
         return m_data.size();
+    }
+
+    glm::vec2 Path::operator[](std::size_t i) const {
+        if (i < m_data.size()) {
+            return m_data[i];
+        }
+        std::cout << "ERROR: out of index: " << i << std::endl;
+        return PATH_END;
     }
 }

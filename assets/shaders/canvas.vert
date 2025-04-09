@@ -12,5 +12,5 @@ out vec3 f_col;
 void main() {
     f_tex = tex;
     f_col = col;
-    gl_Position = u_mat * vec4(pos,0.0, 1.0);
+    gl_Position = u_mat * vec4(pos, 0.0, 1.0);
 }

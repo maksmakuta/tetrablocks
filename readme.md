@@ -17,11 +17,10 @@
 
 ### Features
 
- - [ ] Rendering
-   - [ ] Text 
-   - [ ] Vector shapes
-   - [ ] Images
-     - [ ] With tint support
+ - [X] Rendering
+   - [X] Text 
+   - [X] Vector shapes
+   - [X] Images
    - [ ] UI 
      - [ ] Main Menu
      - [ ] Pause Menu

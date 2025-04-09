@@ -9,8 +9,6 @@ namespace tetrablocks::graphics {
     class Path {
     public:
         Path() = default;
-        Path(const Path&);
-
         explicit Path(const std::vector<glm::vec2>&);
 
         void moveTo(const glm::vec2&);
@@ -18,6 +16,7 @@ namespace tetrablocks::graphics {
         void end();
 
         [[nodiscard]] std::size_t length() const;
+        glm::vec2 operator[](std::size_t) const;
 
     private:
         std::vector<glm::vec2> m_data;

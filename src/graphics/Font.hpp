@@ -27,7 +27,7 @@ namespace tetrablocks::graphics {
         void load(const std::string& font_path, uint size = 24);
         void clear();
 
-        std::optional<Glyph> operator[](uint code);
+        std::optional<Glyph> operator[](uint code) const;
 
         [[nodiscard]] Texture getTexture() const;
         [[nodiscard]] uint getSize() const;
