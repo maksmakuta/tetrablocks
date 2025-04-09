@@ -10,7 +10,7 @@ namespace tetrablocks::game {
         TetraGame() = default;
 
         void init();
-        void clear();
+        void deinit();
         void draw();
         void update(float delta);
 

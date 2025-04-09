@@ -131,14 +131,14 @@ namespace tetrablocks::graphics {
         alloc(static_cast<int>(width),static_cast<int>(height),TextureFormat::RGBA,imageData.data());
     }
 
-    void Texture::clear() {
+    void Texture::deinit() {
         glDeleteTextures(1,&m_handle);
         m_size = {0,0};
     }
 
     void Texture::alloc(const int w, const int h,TextureFormat format, const void* buffer){
         if (m_handle != 0) {
-            clear();
+            deinit();
         }
         glGenTextures(1, &m_handle);
         glBindTexture(GL_TEXTURE_2D,m_handle);

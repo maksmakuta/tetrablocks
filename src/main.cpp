@@ -53,6 +53,13 @@ int main() {
     }
 
     glfwMakeContextCurrent(win);
+    if (!gladLoadGL(glfwGetProcAddress)) {
+        std::cerr << "Cannot load OpenGL library" << std::endl;
+        glfwDestroyWindow(win);
+        glfwTerminate();
+        return -1;
+    }
+
     auto game = tetrablocks::game::TetraGame();
     glfwSetWindowUserPointer(win,&game);
 
@@ -61,12 +68,6 @@ int main() {
     glfwSetKeyCallback(win,onKey);
     glfwSetMouseButtonCallback(win,onButton);
 
-    if (!gladLoadGL(glfwGetProcAddress)) {
-        std::cerr << "Cannot load OpenGL library" << std::endl;
-        glfwDestroyWindow(win);
-        glfwTerminate();
-        return -1;
-    }
     double lastTime = glfwGetTime();
     game.init();
     while (!glfwWindowShouldClose(win)) {
@@ -80,7 +81,7 @@ int main() {
 
         glfwSwapBuffers(win);
     }
-    game.clear();
+    game.deinit();
 
     glfwDestroyWindow(win);
     glfwTerminate();

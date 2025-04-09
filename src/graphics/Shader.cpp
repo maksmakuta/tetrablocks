@@ -98,7 +98,7 @@ namespace tetrablocks::graphics {
         glUniformMatrix4fv(glGetUniformLocation(m_ID,name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
-    void Shader::clear() {
+    void Shader::deinit() {
         glDeleteProgram(m_ID);
         m_ID = 0;
     }

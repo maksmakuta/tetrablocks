@@ -86,9 +86,9 @@ namespace tetrablocks::graphics {
 
     }
 
-    void Font::clear() {
+    void Font::deinit() {
         m_glyphs.clear();
-        m_texture.clear();
+        m_texture.deinit();
         m_size = 0;
     }
 
@@ -97,6 +97,16 @@ namespace tetrablocks::graphics {
             return m_glyphs.at(code);
         }
         return std::nullopt;
+    }
+
+    float Font::getWidth(const std::string &text) const {
+        float t = 0;
+        for (const auto& c : text) {
+            if (const auto g = operator[](c); g) {
+                t += static_cast<float>(g->advance);
+            }
+        }
+        return t;
     }
 
     Texture Font::getTexture() const {

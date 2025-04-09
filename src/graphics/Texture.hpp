@@ -37,7 +37,7 @@ namespace tetrablocks::graphics {
         Texture() = default;
 
         void loadPNG(const std::string& path);
-        void clear();
+        void deinit();
 
         void alloc(int w, int h, TextureFormat format,const void* buffer = nullptr);
         void subdata(int x, int y,int w, int h, TextureFormat format, const void* buffer) const;

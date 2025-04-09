@@ -31,10 +31,10 @@ namespace tetrablocks::graphics {
         Canvas() = default;
 
         void init();
-        void clear();
+        void deinit();
         void draw();
 
-        void blank();
+        void clear();
         void background(const Color&);
         void resize(const glm::vec2&);
 

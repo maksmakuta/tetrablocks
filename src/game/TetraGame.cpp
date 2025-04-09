@@ -11,13 +11,13 @@ namespace tetrablocks::game {
         m_canvas.background(graphics::Color(0xFF202020));
     }
 
-    void TetraGame::clear(){
-        m_canvas.clear();
-        m_font.clear();
+    void TetraGame::deinit(){
+        m_canvas.deinit();
+        m_font.deinit();
     }
 
     void TetraGame::draw(){
-        m_canvas.blank();
+        m_canvas.clear();
         onCanvas(m_canvas);
         m_canvas.draw();
     }

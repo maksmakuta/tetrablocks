@@ -30,7 +30,8 @@ namespace tetrablocks::graphics {
         glEnableVertexAttribArray(2);
     }
 
-    void Canvas::clear() {
+    void Canvas::deinit() {
+        m_shader.deinit();
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
     }
@@ -63,7 +64,7 @@ namespace tetrablocks::graphics {
         }
     }
 
-    void Canvas::blank() {
+    void Canvas::clear() {
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
@@ -219,7 +220,7 @@ namespace tetrablocks::graphics {
         m_vertices.insert(m_vertices.end(),data.begin(), data.end());
     }
 
-    void Canvas::text(const Font& fnt,const std::string& text, const glm::vec2& pos, Align align) {
+    void Canvas::text(const Font& fnt,const std::string& text, const glm::vec2& pos, const Align align) {
         if (!m_vertices.empty()) {
             draw();
         }
@@ -228,6 +229,14 @@ namespace tetrablocks::graphics {
         m_texture_id = 0;
         m_type = 3;
         glm::vec2 p = pos;
+
+        if (align == Align::Center) {
+            p.x += fnt.getWidth(text) / 2.f;
+        }
+        if (align == Align::End) {
+            p.x += fnt.getWidth(text);
+        }
+
         for (const auto& c : text) {
             if (const auto glyph = fnt[c]; glyph) {
 

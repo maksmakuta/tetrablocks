@@ -25,10 +25,11 @@ namespace tetrablocks::graphics {
         Font() = default;
 
         void load(const std::string& font_path, uint size = 24);
-        void clear();
+        void deinit();
 
         std::optional<Glyph> operator[](uint code) const;
 
+        float getWidth(const std::string& text) const;
         [[nodiscard]] Texture getTexture() const;
         [[nodiscard]] uint getSize() const;
     private:

@@ -13,7 +13,7 @@ namespace tetrablocks::graphics {
         void fromMem(const std::string& vertexSource, const std::string& fragmentSource);
         void fromFiles(const std::string& vertexPath, const std::string& fragmentPath);
 
-        void clear();
+        void deinit();
         [[nodiscard]] unsigned int handle() const;
 
         void setInt(const std::string& name, int value) const;
