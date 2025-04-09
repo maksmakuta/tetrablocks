@@ -37,6 +37,10 @@ add_executable(tetrablocks
         src/utils/Assets.hpp
 
         src/main.cpp
+        src/graphics/Path.cpp
+        src/graphics/Path.hpp
+        src/graphics/Canvas.cpp
+        src/graphics/Canvas.hpp
 )
 
 target_include_directories(tetrablocks PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
