@@ -8,6 +8,7 @@
 ### Used technologies
 
  - C++20
+ - CMake 3.30+
  - OpenGL 3.3 Core profile
  - GLM - linear algebra library
  - Freetype - text rendering library
