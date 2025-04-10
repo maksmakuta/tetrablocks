@@ -12,6 +12,10 @@ find_package(PNG REQUIRED)
 
 add_executable(tetrablocks
 
+        src/game/base/IGameController.hpp
+        src/game/base/IScreen.hpp
+        src/game/base/IWidget.hpp
+
         src/game/enums/GameState.hpp
 
         src/game/models/Board.cpp
@@ -19,12 +23,18 @@ add_executable(tetrablocks
         src/game/models/Shape.cpp
         src/game/models/Shape.hpp
 
+        src/game/screens/ScreenMain.cpp
+        src/game/screens/ScreenMain.hpp
+
+        src/game/ui/Button.cpp
+        src/game/ui/Button.hpp
+
         src/game/TetraGame.cpp
         src/game/TetraGame.hpp
 
-        src/graphics/gl/gl.c
-        src/graphics/gl/gl.h
-        src/graphics/gl/khrplatform.h
+        src/graphics/gl/gl.cpp
+        src/graphics/gl/gl.hpp
+        src/graphics/gl/khrplatform.hpp
         src/graphics/Canvas.cpp
         src/graphics/Canvas.hpp
         src/graphics/Color.cpp

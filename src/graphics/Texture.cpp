@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 
-#include "gl/gl.h"
+#include "gl/gl.hpp"
 
 namespace tetrablocks::graphics {
 

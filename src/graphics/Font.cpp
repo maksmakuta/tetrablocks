@@ -6,7 +6,7 @@
 #include <ft2build.h>
 #include <iostream>
 
-#include "gl/gl.h"
+#include "gl/gl.hpp"
 
 #include FT_FREETYPE_H
 

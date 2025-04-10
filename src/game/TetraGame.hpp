@@ -1,27 +1,33 @@
 #ifndef TETRAGAME_HPP
 #define TETRAGAME_HPP
 
+#include <memory>
+
+#include "base/IGameController.hpp"
+#include "base/IScreen.hpp"
 #include "graphics/Canvas.hpp"
 
 namespace tetrablocks::game {
 
-    class TetraGame {
+    class TetraGame final : public base::IGameController{
     public:
         TetraGame() = default;
 
         void init();
         void deinit();
         void draw();
-        void update(float delta);
+        void update(float delta) const;
 
-        void onCanvas(graphics::Canvas& c);
         void onResize(int w, int h);
-        void onCursor(float x, float y);
-        void onKey(int k, int a, int m);
+        void onCursor(float x, float y) const;
+        void onKey(int k, int a, int m) const;
+
+        void goMain() override;
+        void goGame() override;
+
     private:
         graphics::Canvas m_canvas;
-        graphics::Font m_font;
-        glm::vec2 mouse{0,0};
+        std::unique_ptr<base::IScreen> m_screen;
     };
 
 }

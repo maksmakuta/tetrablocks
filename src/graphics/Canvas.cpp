@@ -3,7 +3,7 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/constants.hpp>
 
-#include "gl/gl.h"
+#include "gl/gl.hpp"
 #include "utils/Assets.hpp"
 
 namespace tetrablocks::graphics {
@@ -39,8 +39,6 @@ namespace tetrablocks::graphics {
     void Canvas::draw() {
         if (m_vertices.empty())
             return;
-
-//        glClear(GL_COLOR_BUFFER_BIT);
 
         if (m_type == 3) {
             glEnable(GL_BLEND);
