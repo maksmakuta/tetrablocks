@@ -13,7 +13,7 @@
  - GLM - linear algebra library
  - Freetype - text rendering library
  - GLFW - window management
- - libPNG - image loading library
+ - libspng - loading library for PNG images
 
 ### Features
 
@@ -22,8 +22,9 @@
    - [X] Vector shapes
    - [X] Images
    - [ ] UI 
-     - [ ] Main Menu
+     - [X] Main Menu
      - [ ] Pause Menu
+     - [ ] Game Over Menu
      - [ ] Game
  - [ ] Game logic
    - [ ] Shapes generation
@@ -65,8 +66,9 @@
 
  Maks Makuta (c) 2025   
 
- | Item                                                      | License  |  
- |-----------------------------------------------------------|----------|  
- | Code                                                      | MIT      |
- | [Font](https://www.fontspace.com/timeburner-font-f15111)  | Freeware |
+ | Item                                                     | License           |  
+ |----------------------------------------------------------|-------------------|  
+ | Code                                                     | MIT               |
+ | [Font](https://www.fontspace.com/timeburner-font-f15111) | Freeware          |
+ | [UI Icons](https://kenney.nl/assets/game-icons)          | CC0 1.0 Universal |       
 

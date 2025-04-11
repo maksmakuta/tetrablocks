@@ -2,6 +2,7 @@
 #define SCREENMAIN_HPP
 
 #include "game/base/IScreen.hpp"
+#include "game/ui/Button.hpp"
 
 namespace tetrablocks::screens {
 
@@ -18,9 +19,13 @@ namespace tetrablocks::screens {
         void onKey(int k, int a, int m) override;
     private:
         graphics::Font m_font;
-        glm::vec2 m{0};
-        uint size{0};
-        float bottom{0};
+        graphics::Texture m_logo;
+
+        ui::Button m_play;
+        ui::Button m_exit;
+
+        glm::vec2 pos_logo{0};
+        glm::vec2 pos_author{0};
     };
 
 }

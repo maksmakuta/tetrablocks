@@ -27,7 +27,7 @@ namespace tetrablocks::graphics {
         return m_data.size();
     }
 
-    glm::vec2 Path::operator[](std::size_t i) const {
+    glm::vec2 Path::operator[](const std::size_t i) const {
         if (i < m_data.size()) {
             return m_data[i];
         }

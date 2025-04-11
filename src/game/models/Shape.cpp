@@ -7,7 +7,7 @@ namespace tetrablocks::models {
         const glm::u8vec2& size
     ) : m_data(data), m_size(size) {}
 
-    void Shape::set(const glm::u8vec2& pos, uint8_t value) {
+    void Shape::set(const glm::u8vec2& pos, const uint8_t value) {
         if (pos.x < m_size.x && pos.y < m_size.y) {
             m_data[pos.x + m_size.x * pos.y] = value;
         }

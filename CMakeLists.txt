@@ -8,7 +8,14 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(glm REQUIRED)
-find_package(PNG REQUIRED)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(
+    deps
+    REQUIRED
+    IMPORTED_TARGET
+    spng
+)
 
 add_executable(tetrablocks
 
@@ -54,7 +61,7 @@ add_executable(tetrablocks
 )
 
 target_include_directories(tetrablocks PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_include_directories(tetrablocks PRIVATE glfw Freetype::Freetype OpenGL::OpenGL PNG::PNG glm)
-target_link_libraries(tetrablocks PRIVATE glfw Freetype::Freetype OpenGL::OpenGL PNG::PNG glm)
+target_include_directories(tetrablocks PRIVATE glfw Freetype::Freetype OpenGL::OpenGL PkgConfig::deps glm)
+target_link_libraries(tetrablocks PRIVATE glfw Freetype::Freetype OpenGL::OpenGL PkgConfig::deps glm)
 
 target_compile_definitions(tetrablocks PRIVATE TETRABLOCKS_ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")

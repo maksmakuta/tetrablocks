@@ -47,7 +47,7 @@ namespace tetrablocks::graphics {
 
         glUseProgram(m_shader.handle());
         m_shader.setMat4("u_mat",m_matrix);
-        m_shader.setInt("type",m_type);
+        m_shader.setInt("u_type",m_type);
         m_shader.setInt("u_image",m_texture_id);
 
         glBindVertexArray(VAO);
@@ -223,7 +223,7 @@ namespace tetrablocks::graphics {
         m_vertices.insert(m_vertices.end(),data.begin(), data.end());
     }
 
-    void Canvas::draw(const std::string& text, const glm::vec2& pos, Align align, uint size){
+    void Canvas::draw(const std::string& text, const glm::vec2& pos, const Align align, const uint size){
         if (!m_vertices.empty()) {
             draw();
         }

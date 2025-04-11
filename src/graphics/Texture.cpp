@@ -1,9 +1,11 @@
 #include "Texture.hpp"
 
-#include <png.h>
+#include <spng.h>
 #include <stdexcept>
 #include <fstream>
+#include <iostream>
 #include <vector>
+#include <glm/vector_relational.hpp>
 
 #include "gl/gl.hpp"
 
@@ -65,70 +67,39 @@ namespace tetrablocks::graphics {
 
     void Texture::loadPNG(const std::string& path) {
         FILE* fp = fopen(path.c_str(), "rb");
-        if (!fp)
-            throw std::runtime_error("Failed to open PNG file.");
+        if (!fp) {
+            std::cerr << "Failed to open file: " << path << std::endl;
+            return;
+        }
+        spng_ctx* ctx = spng_ctx_new(0);
+        if (!ctx) {
+            std::cerr << "Failed to create spng context" << std::endl;
+            fclose(fp);
+            return;
+        }
+        spng_set_png_file(ctx, fp);
+        spng_ihdr ihdr{};
+        if (spng_get_ihdr(ctx, &ihdr) != 0) {
+            std::cerr << "Failed to get PNG header" << std::endl;
+            spng_ctx_free(ctx);
+            fclose(fp);
+            return;
 
-        png_byte header[8];
-        fread(header, 1, 8, fp);
-        if (png_sig_cmp(header, 0, 8))
-            throw std::runtime_error("Not a PNG file.");
-
-        png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-        if (!png)
-            throw std::runtime_error("png_create_read_struct failed.");
-
-        png_infop info = png_create_info_struct(png);
-        if (!info)
-            throw std::runtime_error("png_create_info_struct failed.");
-
-        if (_setjmp (*png_set_longjmp_fn(png, longjmp, sizeof (jmp_buf))))
-            throw std::runtime_error("Error during PNG creation.");
-
-        png_init_io(png, fp);
-        png_set_sig_bytes(png, 8);
-
-        png_read_info(png, info);
-
-        const uint width = png_get_image_width(png, info);
-        const uint height = png_get_image_height(png, info);
-        const png_byte color_type = png_get_color_type(png, info);
-        const png_byte bit_depth = png_get_bit_depth(png, info);
-
-        if (bit_depth == 16)
-            png_set_strip_16(png);
-
-        if (color_type == PNG_COLOR_TYPE_PALETTE)
-            png_set_palette_to_rgb(png);
-
-        if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
-            png_set_expand_gray_1_2_4_to_8(png);
-
-        if (png_get_valid(png, info, PNG_INFO_tRNS))
-            png_set_tRNS_to_alpha(png);
-
-        if (color_type == PNG_COLOR_TYPE_RGB ||
-            color_type == PNG_COLOR_TYPE_GRAY ||
-            color_type == PNG_COLOR_TYPE_PALETTE)
-            png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
-
-        if (color_type == PNG_COLOR_TYPE_GRAY ||
-            color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
-            png_set_gray_to_rgb(png);
-
-        png_read_update_info(png, info);
-
-        std::vector<png_byte> imageData(png_get_rowbytes(png, info) * height);
-        std::vector<png_bytep> row_pointers(height);
-        for (int y = 0; y < height; y++) {
-            row_pointers[y] = imageData.data() + y * png_get_rowbytes(png, info);
+        }
+        const size_t img_size = ihdr.width * ihdr.height * 4; // RGBA
+        std::vector<uint8_t> img_data(img_size);
+        if (spng_decode_image(ctx, img_data.data(), img_size, SPNG_FMT_RGBA8, 0) != 0) {
+            std::cerr << "Failed to decode PNG image" << std::endl;
+            spng_ctx_free(ctx);
+            fclose(fp);
+            return;
         }
 
-        png_read_image(png, row_pointers.data());
+        alloc(ihdr.width, ihdr.height, TextureFormat::RGBA,img_data.data());
 
+        spng_ctx_free(ctx);
         fclose(fp);
-        png_destroy_read_struct(&png, &info, nullptr);
 
-        alloc(static_cast<int>(width),static_cast<int>(height),TextureFormat::RGBA,imageData.data());
     }
 
     void Texture::deinit() {
@@ -136,7 +107,7 @@ namespace tetrablocks::graphics {
         m_size = {0,0};
     }
 
-    void Texture::alloc(const int w, const int h,TextureFormat format, const void* buffer){
+    void Texture::alloc(const int w, const int h, const TextureFormat format, const void* buffer){
         if (m_handle != 0) {
             deinit();
         }

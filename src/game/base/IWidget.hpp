@@ -2,18 +2,12 @@
 #define IWIDGET_HPP
 
 #include "graphics/Canvas.hpp"
-#include "utils/Assets.hpp"
 
 namespace tetrablocks::base {
 
     class IWidget {
     public:
-        virtual ~IWidget() = default;
-
-        virtual void onCreate(const utils::Assets&) = 0;
-        virtual void onClear() = 0;
-        virtual void onDraw(graphics::Canvas&) = 0;
-        virtual void onUpdate(float delta) = 0;
+        IWidget() = default;
 
         void setPos(const glm::vec2& p) {
             pos = p;
