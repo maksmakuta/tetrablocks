@@ -17,7 +17,10 @@ namespace tetrablocks::screens {
         void onResize(const glm::vec2 &size) override;
         void onKey(int k, int a, int m) override;
     private:
-
+        graphics::Font m_font;
+        glm::vec2 m{0};
+        uint size{0};
+        float bottom{0};
     };
 
 }

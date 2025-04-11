@@ -42,6 +42,7 @@ namespace tetrablocks::graphics {
         void fill(const Color&);
         void fill(const Texture&, const glm::vec4& uv = {0,0,1,1});
         void stroke(const Color&, float w = 5.f);
+        void text(const Font& fnt,const Color&);
 
         void line(const glm::vec2& a,const glm::vec2& b);
         void triangle(const glm::vec2& a,const glm::vec2& b,const glm::vec2& c);
@@ -57,14 +58,14 @@ namespace tetrablocks::graphics {
 
         /**
          * text function don't inherit drawing settings
-         * @param fnt : Font - font data
          * @param text : std::string - text to draw
          * @param pos : glm::vec2 - text position
          * @param align : Align - text horizontal alignment
          */
-        void text(const Font& fnt,const std::string& text, const glm::vec2& pos, Align align = Align::Start);
+        void draw(const std::string& text, const glm::vec2& pos, Align align = Align::Start, uint size = 0);
     private:
         std::vector<Vertex> m_vertices;
+        Font m_font;
         glm::mat4 m_matrix{1.f};
         glm::vec4 m_uv{0,0,1,1};
         glm::vec3 m_color{1,1,1};

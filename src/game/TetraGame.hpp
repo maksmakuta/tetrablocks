@@ -25,6 +25,9 @@ namespace tetrablocks::game {
         void goMain() override;
         void goGame() override;
 
+        template<class T>
+        void go();
+
     private:
         graphics::Canvas m_canvas;
         std::unique_ptr<base::IScreen> m_screen;

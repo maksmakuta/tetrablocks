@@ -24,7 +24,7 @@ namespace tetrablocks::graphics {
     public:
         Font() = default;
 
-        void load(const std::string& font_path, uint size = 24);
+        void load(const std::string& font_path, uint size = 32); //32 is better to SDF text rendering
         void deinit();
 
         std::optional<Glyph> operator[](uint code) const;

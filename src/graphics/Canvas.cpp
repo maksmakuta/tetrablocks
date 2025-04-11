@@ -111,6 +111,11 @@ namespace tetrablocks::graphics {
         m_thickness = w;
     }
 
+    void Canvas::text(const Font& fnt, const Color& c) {
+        m_font = fnt;
+        m_color = c.toVec3();
+    }
+
     void Canvas::line(const glm::vec2& a,const glm::vec2& b) {
         draw(Path({a,b}));
     }
@@ -218,30 +223,31 @@ namespace tetrablocks::graphics {
         m_vertices.insert(m_vertices.end(),data.begin(), data.end());
     }
 
-    void Canvas::text(const Font& fnt,const std::string& text, const glm::vec2& pos, const Align align) {
+    void Canvas::draw(const std::string& text, const glm::vec2& pos, Align align, uint size){
         if (!m_vertices.empty()) {
             draw();
         }
+        const float scale = size == 0 ? 1.f : static_cast<float>(size) / static_cast<float>(m_font.getSize());
 
-        fnt.getTexture().bind();
+        m_font.getTexture().bind();
         m_texture_id = 0;
         m_type = 3;
         glm::vec2 p = pos;
 
         if (align == Align::Center) {
-            p.x += fnt.getWidth(text) / 2.f;
+            p.x += (m_font.getWidth(text) * scale) / 2.f;
         }
         if (align == Align::End) {
-            p.x += fnt.getWidth(text);
+            p.x += m_font.getWidth(text) * scale;
         }
 
         for (const auto& c : text) {
-            if (const auto glyph = fnt[c]; glyph) {
+            if (const auto glyph = m_font[c]; glyph) {
 
-                const auto x = p.x + static_cast<float>(glyph->offset.x);
-                const auto y = p.y - static_cast<float>(glyph->offset.y);
-                const auto w = static_cast<float>(glyph->size.x);
-                const auto h = static_cast<float>(glyph->size.y);
+                const auto x = p.x + static_cast<float>(glyph->offset.x) * scale;
+                const auto y = p.y - static_cast<float>(glyph->offset.y) * scale;
+                const auto w = static_cast<float>(glyph->size.x) * scale;
+                const auto h = static_cast<float>(glyph->size.y) * scale;
 
                 const auto vertices = std::vector<Vertex>{
                         { glm::vec2{x,     y + h},   {glyph->uv_a.x,glyph->uv_b.y}, m_color},
@@ -253,7 +259,7 @@ namespace tetrablocks::graphics {
                 };
 
                 m_vertices.insert(m_vertices.end(),vertices.begin(), vertices.end());
-                p.x += static_cast<float>(glyph->advance);
+                p.x += static_cast<float>(glyph->advance) * scale;
             }
         }
 

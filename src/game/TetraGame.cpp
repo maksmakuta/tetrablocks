@@ -40,17 +40,19 @@ namespace tetrablocks::game {
     }
 
     void TetraGame::goMain() {
-        if (m_screen) {
-            m_screen->onClear();
-        }
-        m_screen = std::make_unique<screens::ScreenMain>(this);
-        m_screen->onCreate(utils::Assets());
+       go<screens::ScreenMain>();
     }
 
     void TetraGame::goGame() {
+        //TODO(Game screen navigation)
+    }
+
+    template<class T>
+    void TetraGame::go() {
         if (m_screen) {
             m_screen->onClear();
         }
-        //TODO(Game screen navigation)
+        m_screen = std::make_unique<T>(this);
+        m_screen->onCreate(utils::Assets());
     }
 }

@@ -39,6 +39,7 @@ namespace tetrablocks::graphics {
         m_texture.alloc(side,side,TextureFormat::Mono,nullptr);
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        FT_GlyphSlot& slot = face->glyph;
 
         glm::ivec2 off{1,1};
         int height = -1;
@@ -48,6 +49,8 @@ namespace tetrablocks::graphics {
                 std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
                 continue;
             }
+
+            FT_Render_Glyph(slot, FT_RENDER_MODE_SDF);
 
             if (off.x + face->glyph->bitmap.width > side) {
                 off.x = 1;
