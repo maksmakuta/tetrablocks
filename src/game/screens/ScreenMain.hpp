@@ -22,7 +22,6 @@ namespace tetrablocks::screens {
         graphics::Texture m_logo;
 
         ui::Button m_play;
-        ui::Button m_exit;
 
         glm::vec2 pos_logo{0};
         glm::vec2 pos_author{0};

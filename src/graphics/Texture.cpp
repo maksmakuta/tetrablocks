@@ -84,18 +84,25 @@ namespace tetrablocks::graphics {
             spng_ctx_free(ctx);
             fclose(fp);
             return;
-
         }
-        const size_t img_size = ihdr.width * ihdr.height * 4; // RGBA
+
+        size_t img_size = ihdr.width * ihdr.height * 4; // RGBA
+        if (spng_decoded_image_size(ctx, SPNG_FMT_RGBA8, &img_size)) {
+            std::cerr << "Failed to calculate PNG size" << std::endl;
+            spng_ctx_free(ctx);
+            fclose(fp);
+            return;
+        }
+
         std::vector<uint8_t> img_data(img_size);
-        if (spng_decode_image(ctx, img_data.data(), img_size, SPNG_FMT_RGBA8, 0) != 0) {
+        if (spng_decode_image(ctx, img_data.data(), img_size, SPNG_FMT_RGBA8, SPNG_DECODE_TRNS) != 0) {
             std::cerr << "Failed to decode PNG image" << std::endl;
             spng_ctx_free(ctx);
             fclose(fp);
             return;
         }
 
-        alloc(ihdr.width, ihdr.height, TextureFormat::RGBA,img_data.data());
+        alloc(static_cast<int>(ihdr.width), static_cast<int>(ihdr.height), TextureFormat::RGBA,img_data.data());
 
         spng_ctx_free(ctx);
         fclose(fp);

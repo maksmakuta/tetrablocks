@@ -8,7 +8,6 @@ namespace tetrablocks::screens {
 
     void ScreenMain::onCreate(const utils::Assets& assets){
         m_play.setSize(glm::vec2{50});
-        m_exit.setSize(glm::vec2{50});
 
         m_font.load(assets.getFont("burner.ttf"),32);
 
@@ -18,8 +17,7 @@ namespace tetrablocks::screens {
         m_logo.setMinFilter(graphics::TextureFilter::Linear);
         m_logo.genMipmaps();
 
-        m_play.onCreate(assets,"ui/play.png");
-        m_exit.onCreate(assets,"ui/exit.png");
+        m_play.onCreate(assets,"ui/trophy.png");
     }
 
     void ScreenMain::onClear(){
@@ -31,10 +29,9 @@ namespace tetrablocks::screens {
         c.rect(pos_logo,m_logo.getSize()*3u);
 
         m_play.onDraw(c);
-        m_exit.onDraw(c);
 
         c.text(m_font,graphics::Color(0xFFFFFFFF));
-        c.draw("Maks Makuta (C)", pos_author,graphics::Align::Start,20);
+        c.draw("Maks Makuta (C)", pos_author,graphics::Align::Start);
     }
 
     void ScreenMain::onUpdate(float delta){
@@ -47,7 +44,7 @@ namespace tetrablocks::screens {
 
     void ScreenMain::onResize(const glm::vec2 &size){
         if (m_logo.getHandle() != 0) {
-            const auto logo_size = m_logo.getSize() * 3u;
+            const auto logo_size = glm::vec2(m_logo.getSize()) * 3.f;
             pos_logo = glm::vec2(size.x / 2.f - logo_size.x / 2.f, size.y / 3.f - logo_size.y / 2.f);
         }
         pos_author = {5,size.y-5};

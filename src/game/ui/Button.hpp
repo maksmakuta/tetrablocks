@@ -1,5 +1,6 @@
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
+
 #include "game/base/IWidget.hpp"
 #include "utils/Assets.hpp"
 
