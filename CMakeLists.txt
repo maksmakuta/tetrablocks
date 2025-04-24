@@ -1,67 +1,33 @@
-cmake_minimum_required(VERSION 3.30)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.30 FATAL_ERROR)
 project(tetrablocks)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
-find_package(Freetype REQUIRED)
+find_package(OpenGL REQUIRED)
 find_package(glm REQUIRED)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(
-    deps
-    REQUIRED
-    IMPORTED_TARGET
-    spng
-)
+add_subdirectory(libs/glad)
+add_subdirectory(libs/LodePNG)
 
-add_executable(tetrablocks
-
-        src/game/base/IGameController.hpp
-        src/game/base/IScreen.hpp
-        src/game/base/IWidget.hpp
-
-        src/game/enums/GameState.hpp
-
-        src/game/models/Board.cpp
-        src/game/models/Board.hpp
-        src/game/models/Shape.cpp
-        src/game/models/Shape.hpp
-
-        src/game/screens/ScreenMain.cpp
-        src/game/screens/ScreenMain.hpp
-
-        src/game/ui/Button.cpp
-        src/game/ui/Button.hpp
-
-        src/game/TetraGame.cpp
-        src/game/TetraGame.hpp
-
-        src/graphics/gl/gl.cpp
-        src/graphics/gl/gl.hpp
-        src/graphics/gl/khrplatform.hpp
-        src/graphics/Canvas.cpp
-        src/graphics/Canvas.hpp
-        src/graphics/Color.cpp
-        src/graphics/Color.hpp
-        src/graphics/Font.cpp
-        src/graphics/Font.hpp
+add_executable(tetrablocks src/main.cpp
+        include/tetrablocks/game/Game.hpp
+        include/tetrablocks/graphics/Renderer.hpp
+        include/tetrablocks/Constants.hpp
+        src/game/Game.cpp
+        include/tetrablocks/model/Board.hpp
+        include/tetrablocks/model/Shape.hpp
+        include/tetrablocks/model/Block.hpp
+        src/model/Shape.cpp
+        src/graphics/Renderer.cpp
+        include/tetrablocks/graphics/Shader.hpp
+        include/tetrablocks/graphics/Texture.hpp
+        include/tetrablocks/graphics/Font.hpp
+        src/model/Block.cpp
+        src/model/Board.cpp
         src/graphics/Shader.cpp
-        src/graphics/Shader.hpp
-        src/graphics/Path.cpp
-        src/graphics/Path.hpp
-        src/graphics/Texture.cpp
-        src/graphics/Texture.hpp
-        src/utils/Assets.cpp
-        src/utils/Assets.hpp
-
-        src/main.cpp
-)
-
-target_include_directories(tetrablocks PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_include_directories(tetrablocks PRIVATE glfw Freetype::Freetype OpenGL::OpenGL PkgConfig::deps glm)
-target_link_libraries(tetrablocks PRIVATE glfw Freetype::Freetype OpenGL::OpenGL PkgConfig::deps glm)
-
-target_compile_definitions(tetrablocks PRIVATE TETRABLOCKS_ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+        src/graphics/Texture.cpp)
+target_link_libraries(tetrablocks PUBLIC glfw OpenGL::GL GLAD LodePNG glm::glm)
+target_include_directories(tetrablocks PUBLIC include)
+target_compile_definitions(tetrablocks PUBLIC ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets")

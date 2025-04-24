@@ -1,19 +1,29 @@
-#include "graphics/gl/gl.hpp"
-
+#include "glad/gl.h"
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-
 #include <iostream>
 
-#include "game/TetraGame.hpp"
+#include "tetrablocks/game/Game.hpp"
 
-tetrablocks::game::TetraGame* getGame(GLFWwindow* win) {
-    return static_cast<tetrablocks::game::TetraGame *>(glfwGetWindowUserPointer(win));
+tetrablocks::Game* getGame(GLFWwindow* window) {
+    return static_cast<tetrablocks::Game*>(glfwGetWindowUserPointer(window));
 }
 
-void onResize(GLFWwindow * window, const int width, const int height) {
+void onResize(GLFWwindow* window, const int width, const int height) {
     if (const auto game = getGame(window); game != nullptr) {
         game->onResize(width,height);
+    }
+}
+
+void onKey(GLFWwindow* window, const int key, int, const int action, const int mods) {
+    if (const auto game = getGame(window); game != nullptr) {
+        game->onKey(key,action,mods);
+    }
+}
+
+void onScroll(GLFWwindow* window, const double offset_x, const double offset_y) {
+    if (const auto game = getGame(window); game != nullptr) {
+        game->onScroll(static_cast<float>(offset_x),static_cast<float>(offset_y));
     }
 }
 
@@ -23,68 +33,54 @@ void onCursor(GLFWwindow * window, const double x, const double y) {
     }
 }
 
-void onKey(GLFWwindow * window, const int key, int , const int action, const int mods) {
-    if (const auto game = getGame(window); game != nullptr) {
-        game->onKey(key,action,mods);
-    }
-}
-
-void onButton(GLFWwindow * window, const int button, const int action, const int mods) {
-    if (const auto game = getGame(window); game != nullptr) {
-        game->onKey(button,action,mods);
-    }
-}
-
 int main() {
     if (!glfwInit()) {
-        std::cerr << "Cannot init GLFW library" << std::endl;
+        std::cerr << "Failed to initialize GLFW\n";
         return -1;
     }
 
-    glfwWindowHint(GLFW_VERSION_MAJOR,3);
-    glfwWindowHint(GLFW_VERSION_MINOR,3);
-    glfwWindowHint(GLFW_SAMPLES,8);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#if __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for macOS
+#endif
 
-    GLFWwindow* win = glfwCreateWindow(800,600,"TetraBlocks",nullptr,nullptr);
-    if (!win) {
-        std::cerr << "Cannot create GLFW window" << std::endl;
+    GLFWwindow* window = glfwCreateWindow(800, 600, "TetraBlocks", nullptr, nullptr);
+    if (!window) {
+        std::cerr << "Failed to create GLFW window\n";
         glfwTerminate();
         return -1;
     }
 
-    glfwMakeContextCurrent(win);
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
     if (!gladLoadGL(glfwGetProcAddress)) {
-        std::cerr << "Cannot load OpenGL library" << std::endl;
-        glfwDestroyWindow(win);
-        glfwTerminate();
+        std::cerr << "Failed to initialize GLAD\n";
         return -1;
     }
+    auto game = tetrablocks::Game();
+    auto context = tetrablocks::Renderer();
+    glfwSetWindowUserPointer(window,&game);
 
-    auto game = tetrablocks::game::TetraGame();
-    glfwSetWindowUserPointer(win,&game);
+    glfwSetFramebufferSizeCallback(window, onResize);
+    glfwSetCursorPosCallback(window, onCursor);
+    glfwSetKeyCallback(window,onKey);
+    glfwSetScrollCallback(window,onScroll);
 
-    glfwSetWindowSizeCallback(win,onResize);
-    glfwSetCursorPosCallback(win,onCursor);
-    glfwSetKeyCallback(win,onKey);
-    glfwSetMouseButtonCallback(win,onButton);
-
-    double lastTime = glfwGetTime();
-    game.init();
-    while (!glfwWindowShouldClose(win)) {
+    auto lastTime = glfwGetTime();
+    while (!glfwWindowShouldClose(window)) {
+        const auto now = glfwGetTime();
+        game.onTick(static_cast<float>(now - lastTime));
+        lastTime = now;
         glfwPollEvents();
 
-        const double now = glfwGetTime();
-        game.update(static_cast<float>(now - lastTime));
-        lastTime = now;
-
-        game.draw();
-
-        glfwSwapBuffers(win);
+        game.onDraw(context);
+        glfwSwapBuffers(window);
     }
-    game.deinit();
 
-    glfwDestroyWindow(win);
+    glfwDestroyWindow(window);
     glfwTerminate();
-
     return 0;
 }

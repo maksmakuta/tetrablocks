@@ -1,17 +1,17 @@
-#include "Texture.hpp"
+#include "tetrablocks/graphics/Texture.hpp"
 
-#include <spng.h>
 #include <stdexcept>
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include <glm/vector_relational.hpp>
 
-#include "gl/gl.hpp"
+#include "glad/gl.h"
+#include "lodePNG/lodepng.h"
 
-namespace tetrablocks::graphics {
+namespace tetrablocks {
 
-    namespace detail {
+    namespace internal {
 
         inline int toGL(const TextureWrap wrap) {
             switch (wrap) {
@@ -65,68 +65,36 @@ namespace tetrablocks::graphics {
 
     }
 
-    void Texture::loadPNG(const std::string& path) {
-        FILE* fp = fopen(path.c_str(), "rb");
-        if (!fp) {
-            std::cerr << "Failed to open file: " << path << std::endl;
+    
+    Texture::Texture(const std::string& path) : m_size(0), m_handle(0){
+        std::vector<unsigned char> image;
+        unsigned width, height;
+        if(const unsigned error = lodepng::decode(image, width, height, path); error != 0) {
+            std::cout << "Loading image error " << error << ": " << lodepng_error_text(error) << std::endl;
             return;
         }
-        spng_ctx* ctx = spng_ctx_new(0);
-        if (!ctx) {
-            std::cerr << "Failed to create spng context" << std::endl;
-            fclose(fp);
-            return;
-        }
-        spng_set_png_file(ctx, fp);
-        spng_ihdr ihdr{};
-        if (spng_get_ihdr(ctx, &ihdr) != 0) {
-            std::cerr << "Failed to get PNG header" << std::endl;
-            spng_ctx_free(ctx);
-            fclose(fp);
-            return;
-        }
-
-        size_t img_size = ihdr.width * ihdr.height * 4; // RGBA
-        if (spng_decoded_image_size(ctx, SPNG_FMT_RGBA8, &img_size)) {
-            std::cerr << "Failed to calculate PNG size" << std::endl;
-            spng_ctx_free(ctx);
-            fclose(fp);
-            return;
-        }
-
-        std::vector<uint8_t> img_data(img_size);
-        if (spng_decode_image(ctx, img_data.data(), img_size, SPNG_FMT_RGBA8, SPNG_DECODE_TRNS) != 0) {
-            std::cerr << "Failed to decode PNG image" << std::endl;
-            spng_ctx_free(ctx);
-            fclose(fp);
-            return;
-        }
-
-        alloc(static_cast<int>(ihdr.width), static_cast<int>(ihdr.height), TextureFormat::RGBA,img_data.data());
-
-        spng_ctx_free(ctx);
-        fclose(fp);
-
-    }
-
-    void Texture::deinit() {
-        glDeleteTextures(1,&m_handle);
-        m_size = {0,0};
+        alloc(static_cast<int>(width),static_cast<int>(height),TextureFormat::RGBA,image.data());
     }
 
     void Texture::alloc(const int w, const int h, const TextureFormat format, const void* buffer){
         if (m_handle != 0) {
-            deinit();
+            glDeleteTextures(1,&m_handle);
+            m_size = {0,0};
         }
         glGenTextures(1, &m_handle);
         glBindTexture(GL_TEXTURE_2D,m_handle);
-        glTexImage2D(GL_TEXTURE_2D, 0, detail::toGL(format), w, h, 0, detail::toGL(format), GL_UNSIGNED_BYTE, buffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, internal::toGL(format), w, h, 0, internal::toGL(format), GL_UNSIGNED_BYTE, buffer);
         m_size = {w,h};
+    }
+
+    Texture::~Texture() {
+        glDeleteTextures(1,&m_handle);
+        m_size = {0,0};
     }
 
     void Texture::subdata(const int x, const int y, const int w, const int h, const TextureFormat format, const void* buffer) const {
         if (m_handle != 0){
-            glTexSubImage2D(GL_TEXTURE_2D,0,x,y,w,h,detail::toGL(format),GL_UNSIGNED_BYTE, buffer);
+            glTexSubImage2D(GL_TEXTURE_2D,0,x,y,w,h,internal::toGL(format),GL_UNSIGNED_BYTE, buffer);
         }
     }
 
@@ -136,26 +104,26 @@ namespace tetrablocks::graphics {
 
     void Texture::setWrap(const TextureWrap s, const TextureWrap t) const {
         if (m_handle != 0){
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, detail::toGL(s));
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, detail::toGL(t));
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, internal::toGL(s));
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, internal::toGL(t));
         }
     }
 
     void Texture::setMinFilter(const TextureFilter f) const {
         if (m_handle != 0) {
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, detail::toGL(f));
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, internal::toGL(f));
         }
     }
 
     void Texture::setMinFilter(const TextureMinFilter f) const {
         if (m_handle != 0) {
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, detail::toGL(f));
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, internal::toGL(f));
         }
     }
 
     void Texture::setMagFilter(const TextureFilter f) const {
         if (m_handle != 0) {
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, detail::toGL(f));
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, internal::toGL(f));
         }
     }
 
@@ -178,13 +146,12 @@ namespace tetrablocks::graphics {
         glActiveTexture(GL_TEXTURE0 + slot);
         glBindTexture(GL_TEXTURE_2D,m_handle);
     }
-
-    [[nodiscard]] uint Texture::getHandle() const{
-        return m_handle;
-    }
-
-    [[nodiscard]] glm::uvec2 Texture::getSize() const{
+    
+    glm::vec2 Texture::getSize() const{
         return m_size;
     }
 
+    glm::uint Texture::getID() const {
+        return m_handle;
+    }
 }
