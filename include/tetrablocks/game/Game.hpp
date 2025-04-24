@@ -18,6 +18,8 @@ namespace tetrablocks {
         void onCursor(float x, float y);
     private:
         Renderer m_renderer;
+        Font m_font;
+        Texture m_image;
         glm::vec2 m{0};
     };
 

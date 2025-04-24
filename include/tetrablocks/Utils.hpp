@@ -1,0 +1,15 @@
+#ifndef UTILS_HPP
+#define UTILS_HPP
+
+#include <string>
+#include <functional>
+#include <glm/vec2.hpp>
+
+namespace tetrablocks {
+
+    void forXY(const glm::uvec2& size, const std::function<void(const glm::uvec2&)>& fn);
+    std::string getAsset(const std::string& path);
+
+}
+
+#endif //UTILS_HPP

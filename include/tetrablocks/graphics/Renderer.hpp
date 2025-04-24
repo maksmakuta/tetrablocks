@@ -27,7 +27,7 @@ namespace tetrablocks {
         void resize(int w,int h);
         void clear(const glm::uint& color = 0xFF000000);
 
-        void drawText(const Font& fnt, const std::string& text, const glm::vec2& pos, const Align& = Align::Start);
+        void drawText(const Font& fnt, const std::string& text, const glm::vec2& pos, const glm::uint& col = 0xFFFFFFFF, const Align& = Align::Start);
         void drawRect(float x,float y,float w,float h, const glm::uint& col);
         void drawImage(float x,float y,float w,float h, const Texture& tex);
         void push();
@@ -38,7 +38,7 @@ namespace tetrablocks {
         Shader m_shader;
         glm::uint m_vao;
         glm::uint m_vbo;
-        glm::uint color;
+        glm::uint m_color;
         int m_texture;
         int m_type;
     };

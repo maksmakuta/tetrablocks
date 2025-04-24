@@ -81,10 +81,9 @@ namespace tetrablocks {
     void Texture::alloc(const int w, const int h, const TextureFormat format, const void* buffer){
         if (m_handle != 0) {
             glDeleteTextures(1,&m_handle);
-            m_size = {0,0};
         }
         glGenTextures(1, &m_handle);
-        glBindTexture(GL_TEXTURE_2D,m_handle);
+        bind();
         glTexImage2D(GL_TEXTURE_2D, 0, internal::toGL(format), w, h, 0, internal::toGL(format), GL_UNSIGNED_BYTE, buffer);
         m_size = {w,h};
     }

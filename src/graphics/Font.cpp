@@ -24,9 +24,9 @@ namespace tetrablocks {
         FT_Set_Pixel_Sizes(face, 0, size);
         m_size = size;
 
-        const int startIndex = 32;
-        const int endIndex = 128;
-        const int range = endIndex - startIndex;
+        constexpr auto startIndex = 32;
+        constexpr auto endIndex = 128;
+        constexpr auto range = endIndex - startIndex;
 
         const int area = static_cast<int>(size * size) * range;
         int side = 64;
@@ -36,21 +36,16 @@ namespace tetrablocks {
 
         const glm::vec2 atlas{static_cast<float>(side)};
 
-        m_texture.alloc(side,side,TextureFormat::Mono,nullptr);
-
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        FT_GlyphSlot& slot = face->glyph;
-
+        m_texture.alloc(side,side,TextureFormat::Mono,nullptr);
         glm::ivec2 off{1,1};
         int height = -1;
 
-        for (unsigned char c = startIndex; c < endIndex; c++){
+        for (auto c = startIndex; c < endIndex; c++){
             if (FT_Load_Char(face, c, FT_LOAD_RENDER)){
-                std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+                std::cout << "ERROR::FREETYTPE: Failed to load Glyph: " << c << std::endl;
                 continue;
             }
-
-            FT_Render_Glyph(slot, FT_RENDER_MODE_SDF);
 
             if (off.x + face->glyph->bitmap.width > side) {
                 off.x = 1;
@@ -80,13 +75,13 @@ namespace tetrablocks {
             height = std::max<int>(height,static_cast<int>(face->glyph->bitmap.rows));
         }
 
+        m_texture.setWrap(TextureWrap::Repeat);
         m_texture.setMagFilter(TextureFilter::Linear);
-        m_texture.setMinFilter(TextureFilter::Nearest);
+        m_texture.setMinFilter(TextureFilter::Linear);
         m_texture.genMipmaps();
 
         FT_Done_Face(face);
         FT_Done_FreeType(ft);
-
     }
 
     std::optional<Glyph> Font::operator[](const uint code) const {

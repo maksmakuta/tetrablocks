@@ -21,8 +21,8 @@ add_executable(tetrablocks
         include/tetrablocks/model/Board.hpp
         include/tetrablocks/model/Block.hpp
         include/tetrablocks/model/Shape.hpp
-        include/tetrablocks/utils/Utils.hpp
         include/tetrablocks/Constants.hpp
+        include/tetrablocks/Utils.hpp
 
         src/game/Game.cpp
         src/graphics/Font.cpp
@@ -32,6 +32,7 @@ add_executable(tetrablocks
         src/model/Block.cpp
         src/model/Board.cpp
         src/model/Shape.cpp
+        src/Utils.cpp
         src/main.cpp
 )
 

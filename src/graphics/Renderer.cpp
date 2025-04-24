@@ -1,20 +1,14 @@
 #include "tetrablocks/graphics/Renderer.hpp"
 
+#include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "glad/gl.h"
+#include "tetrablocks/Utils.hpp"
 
 namespace tetrablocks {
 
-    namespace internal {
-
-        std::string getAsset(const std::string& path) {
-            return std::string(ASSETS_DIR) + path;
-        }
-
-    }
-
-    Renderer::Renderer() : m_vao(0), m_vbo(0), color(0xFF000000), m_texture(0), m_type(1) {
+    Renderer::Renderer() : m_vao(0), m_vbo(0), m_color(0xFF000000), m_texture(0), m_type(1) {
         glGenVertexArrays(1, &m_vao);
         glGenBuffers(1, &m_vbo);
 
@@ -29,8 +23,8 @@ namespace tetrablocks {
         glEnableVertexAttribArray(1);
 
         m_shader.loadFromFiles(
-            internal::getAsset("/shaders/box.vert"),
-            internal::getAsset("/shaders/box.frag")
+            getAsset("/shaders/main.vert"),
+            getAsset("/shaders/main.frag")
         );
     }
 
@@ -54,8 +48,7 @@ namespace tetrablocks {
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void Renderer::drawText(const Font& fnt, const std::string& text, const glm::vec2& pos, const Align& align) {
-        fnt.getTexture().bind(15);
+    void Renderer::drawText(const Font& fnt, const std::string& text, const glm::vec2& pos, const glm::uint& col, const Align& align) {
         glm::vec2 p = pos;
 
         if (align == Align::Center) {
@@ -66,7 +59,7 @@ namespace tetrablocks {
         }
 
         for (const auto& c : text) {
-            if (const auto glyph = fnt[c]; glyph) {
+            if (const auto glyph = fnt[c]) {
 
                 const auto x = p.x + static_cast<float>(glyph->offset.x);
                 const auto y = p.y - static_cast<float>(glyph->offset.y);
@@ -86,28 +79,34 @@ namespace tetrablocks {
                 p.x += static_cast<float>(glyph->advance);
             }
         }
+
+        fnt.getTexture().bind();
         m_type = 3;
-        m_texture = 15;
+        m_texture = 0;
+        m_color = col;
+
         push();
     }
 
     void Renderer::drawRect(const float x, const float y, const float w, const float h, const glm::uint& col) {
-        color = col;
+        constexpr auto zero = glm::vec2{0};
         const auto vertices = std::vector<Vertex>{
-            { glm::vec2{x,     y + h},   {0.f,1.f}},
-            { glm::vec2{x,     y    },   {0.f,0.f}},
-            { glm::vec2{x + w, y    },   {1.f,0.f}},
-            { glm::vec2{x,     y + h},   {0.f,1.f}},
-            { glm::vec2{x + w, y    },   {1.f,0.f}},
-            { glm::vec2{x + w, y + h},   {1.f,1.f}}
+            { glm::vec2{x,     y + h},zero},
+            { glm::vec2{x,     y    },zero},
+            { glm::vec2{x + w, y    },zero},
+            { glm::vec2{x,     y + h},zero},
+            { glm::vec2{x + w, y    },zero},
+            { glm::vec2{x + w, y + h},zero}
         };
         m_vertices.insert(m_vertices.end(),vertices.begin(), vertices.end());
+
         m_type = 1;
+        m_color = col;
+
         push();
     }
 
     void Renderer::drawImage(const float x, const float y, const float w, const float h,  const Texture& tex) {
-        tex.bind();
         const auto vertices = std::vector<Vertex>{
                 { glm::vec2{x,     y + h},   {0.f,1.f}},
                 { glm::vec2{x,     y    },   {0.f,0.f}},
@@ -117,32 +116,34 @@ namespace tetrablocks {
                 { glm::vec2{x + w, y + h},   {1.f,1.f}}
         };
         m_vertices.insert(m_vertices.end(),vertices.begin(), vertices.end());
+
         m_type = 2;
+        tex.bind();
         m_texture = 0;
+
         push();
     }
 
     void Renderer::push() {
-        if (m_vertices.empty())
-            return;
+        m_shader.use();
+        m_shader.setMat4("u_mat",m_matrix);
+        m_shader.setInt("u_type",m_type);
+        if (m_type == 1) {
+            const glm::vec4 col{
+                static_cast<float>(m_color >> 16 & 0xFF) / 255.f,
+                static_cast<float>(m_color >> 8  & 0xFF) / 255.f,
+                static_cast<float>(m_color >> 0  & 0xFF) / 255.f,
+                static_cast<float>(m_color >> 24 & 0xFF) / 255.f,
+            };
+            m_shader.setVec4("u_color",col);
+        }else {
+            m_shader.setInt("u_image",m_texture);
+        }
 
-        if (m_type != 1) {
+        if (m_type == 3) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
-
-        const glm::vec4 col{
-            static_cast<float>(color >> 16 & 0xFF) / 255.f,
-            static_cast<float>(color >> 8  & 0xFF) / 255.f,
-            static_cast<float>(color >> 0  & 0xFF) / 255.f,
-            static_cast<float>(color >> 24 & 0xFF) / 255.f,
-        };
-
-        m_shader.use();
-        m_shader.setMat4("u_mat",m_matrix);
-        m_shader.setVec4("u_color",col);
-        m_shader.setInt("u_type",m_type);
-        m_shader.setInt("u_image",m_texture);
 
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -150,9 +151,10 @@ namespace tetrablocks {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(m_vertices.size()));
 
-        m_vertices.clear();
-        if (m_type != 1) {
+        if (m_type == 3) {
             glDisable(GL_BLEND);
         }
+
+        m_vertices.clear();
     }
 }

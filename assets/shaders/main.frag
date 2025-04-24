@@ -1,4 +1,4 @@
-#version 330 core
+#version 460 core
 in vec2 f_tex;
 
 uniform sampler2D u_image;
@@ -13,7 +13,7 @@ void main() {
     }else if(u_type == 2){
         f_color = texture(u_image,f_tex);
     }else if(u_type == 3){
-        f_color = vec4(u_color.xyz, u_color.w * texture(u_image,f_tex).r);
+        f_color = vec4(u_color.rgb, texture(u_image,f_tex).r);
     }else{
         discard;
     }
