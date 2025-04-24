@@ -21,15 +21,15 @@ void onKey(GLFWwindow* window, const int key, int, const int action, const int m
     }
 }
 
-void onScroll(GLFWwindow* window, const double offset_x, const double offset_y) {
-    if (const auto game = getGame(window); game != nullptr) {
-        game->onScroll(static_cast<float>(offset_x),static_cast<float>(offset_y));
-    }
-}
-
 void onCursor(GLFWwindow * window, const double x, const double y) {
     if (const auto game = getGame(window); game != nullptr) {
         game->onCursor(static_cast<float>(x),static_cast<float>(y));
+    }
+}
+
+void onButton(GLFWwindow * window, const int button, const int action, const int mods) {
+    if (const auto game = getGame(window); game != nullptr) {
+        game->onKey(button,action,mods);
     }
 }
 
@@ -39,8 +39,8 @@ int main() {
         return -1;
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #if __APPLE__
@@ -66,7 +66,7 @@ int main() {
     glfwSetFramebufferSizeCallback(window, onResize);
     glfwSetCursorPosCallback(window, onCursor);
     glfwSetKeyCallback(window,onKey);
-    glfwSetScrollCallback(window,onScroll);
+    glfwSetMouseButtonCallback(window,onButton);
 
     auto lastTime = glfwGetTime();
     while (!glfwWindowShouldClose(window)) {

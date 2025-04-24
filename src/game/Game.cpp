@@ -23,10 +23,6 @@ namespace tetrablocks {
 
     }
 
-    void Game::onScroll(float dx, float dy){
-
-    }
-
     void Game::onCursor(float x, float y){
         m = {x,y};
     }

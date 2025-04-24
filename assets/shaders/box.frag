@@ -1,4 +1,4 @@
-#version 460 core
+#version 330 core
 in vec2 f_tex;
 
 uniform sampler2D u_image;
