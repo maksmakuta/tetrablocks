@@ -1,24 +1,46 @@
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
 
-#include <glm/vec2.hpp>
+#include <vector>
+
+#include "Font.hpp"
+#include "Shader.hpp"
 
 namespace tetrablocks {
+
+    struct Vertex {
+        glm::vec2 pos;
+        glm::vec2 tex;
+    };
+
+    enum class Align : uint8_t{
+        Center,
+        Start,
+        End
+    };
 
     class Renderer {
     public:
         Renderer();
         ~Renderer();
 
-        //low-level rendering
-        void drawTile();
-        void drawText();
-        void drawRect();
-        void drawImage();
+        void resize(int w,int h);
+        void clear(const glm::uint& color = 0xFF000000);
+
+        void drawText(const Font& fnt, const std::string& text, const glm::vec2& pos, const Align& = Align::Start);
+        void drawRect(float x,float y,float w,float h, const glm::uint& col);
+        void drawImage(float x,float y,float w,float h, const Texture& tex);
+        void push();
 
     private:
-        glm::uint m_program;
-        glm::uint m_vao, m_vbo;
+        glm::mat4 m_matrix{1.f};
+        std::vector<Vertex> m_vertices;
+        Shader m_shader;
+        glm::uint m_vao;
+        glm::uint m_vbo;
+        glm::uint color;
+        int m_texture;
+        int m_type;
     };
 
 }

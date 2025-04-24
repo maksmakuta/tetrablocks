@@ -65,7 +65,9 @@ namespace tetrablocks {
 
     }
 
-    
+
+    Texture::Texture() : m_size(0), m_handle(0){}
+
     Texture::Texture(const std::string& path) : m_size(0), m_handle(0){
         std::vector<unsigned char> image;
         unsigned width, height;

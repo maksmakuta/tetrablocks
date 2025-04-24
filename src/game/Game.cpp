@@ -10,8 +10,9 @@ namespace tetrablocks {
 
     }
 
-    void Game::onDraw(Renderer&) {
-
+    void Game::onDraw(Renderer& r) {
+        r.clear(0xFF202020);
+        r.drawRect(m.x,m.y,200,200,0xFFFFFF00);
     }
 
     void Game::onTick(float dt) {
@@ -31,7 +32,7 @@ namespace tetrablocks {
     }
 
     void Game::onCursor(float x, float y){
-
+        m = {x,y};
     }
 
 }

@@ -17,6 +17,8 @@ namespace tetrablocks {
         void onKey(int k, int a, int m);
         void onScroll(float dx, float dy);
         void onCursor(float x, float y);
+    private:
+        glm::vec2 m{0};
     };
 
 }
