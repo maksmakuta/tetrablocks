@@ -61,7 +61,6 @@ int main() {
         return -1;
     }
     auto game = tetrablocks::Game();
-    auto context = tetrablocks::Renderer();
     glfwSetWindowUserPointer(window,&game);
 
     glfwSetFramebufferSizeCallback(window, onResize);
@@ -76,7 +75,7 @@ int main() {
         lastTime = now;
         glfwPollEvents();
 
-        game.onDraw(context);
+        game.onDraw();
         glfwSwapBuffers(window);
     }
 

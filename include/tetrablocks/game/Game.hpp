@@ -10,7 +10,7 @@ namespace tetrablocks {
         Game();
         ~Game();
 
-        void onDraw(Renderer&);
+        void onDraw();
         void onTick(float dt);
 
         void onResize(int w, int h);
@@ -18,6 +18,7 @@ namespace tetrablocks {
         void onScroll(float dx, float dy);
         void onCursor(float x, float y);
     private:
+        Renderer m_renderer;
         glm::vec2 m{0};
     };
 

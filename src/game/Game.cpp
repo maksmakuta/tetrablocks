@@ -2,15 +2,11 @@
 
 namespace tetrablocks {
 
-    Game::Game() {
+    Game::Game() = default;
+    Game::~Game() = default;
 
-    }
-
-    Game::~Game() {
-
-    }
-
-    void Game::onDraw(Renderer& r) {
+    void Game::onDraw() {
+        auto& r = this->m_renderer;
         r.clear(0xFF202020);
         r.drawRect(m.x,m.y,200,200,0xFFFFFF00);
     }
@@ -19,8 +15,8 @@ namespace tetrablocks {
 
     }
 
-    void Game::onResize(int w, int h){
-
+    void Game::onResize(const int w, const int h){
+        m_renderer.resize(w,h);
     }
 
     void Game::onKey(int k, int a, int m){
