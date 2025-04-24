@@ -4,12 +4,12 @@ namespace tetrablocks {
 
     Board::Board(const glm::uvec2& size) : m_data(size.x * size.y), m_size(size){}
 
-    bool Board::isFit(const Shape&) {
+    bool Board::isFit(const Shape& s, const glm::uvec2& offset) {
         //TODO(Board::isFit(const Shape&))
         return false;
     }
 
-    void Board::put(const Shape&) {
+    void Board::put(const Shape& s, const glm::uvec2& offset) {
         //TODO(Board::put(const Shape&))
     }
 
