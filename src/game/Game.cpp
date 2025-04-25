@@ -5,23 +5,18 @@
 
 namespace tetrablocks {
 
-    Game::Game() : m_font(getAsset("/fonts/Constance.otf"),24), m_image(getAsset("/textures/wall.png")){
-
+    Game::Game() : m_wall(getAsset("/textures/wall.png")){
+        m_wall.bind();
+        m_wall.setWrap(TextureWrap::Repeat);
+        m_wall.setMinFilter(TextureFilter::Linear);
+        m_wall.setMagFilter(TextureFilter::Linear);
+        m_wall.genMipmaps();
     }
 
     Game::~Game() = default;
 
     void Game::onDraw() {
-        auto& r = this->m_renderer;
-        r.clear(0xFF202020);
-
-        r.drawRect(0,0,50,50,getColor(Block::Purple));
-
-        const auto s = m_font.getTexture().getSize();
-        r.drawImage(m.x,m.y,s.x,s.y,m_image);
-
-        r.drawText(m_font,"Just text",{0,m_font.getSize()},getColor(Block::Green));
-
+        onRender(m_renderer);
     }
 
     void Game::onTick(float dt) {
@@ -40,4 +35,11 @@ namespace tetrablocks {
         m = {x,y};
     }
 
+    void Game::onRender(Renderer &r) {
+        r.clear(getColor(Block::Cyan));
+
+        r.drawRect(0,0,256,256,getColor(Block::Orange));
+        r.drawImage(0,256,256,256,m_wall);
+
+    }
 }

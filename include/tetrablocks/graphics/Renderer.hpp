@@ -5,6 +5,7 @@
 
 #include "Font.hpp"
 #include "Shader.hpp"
+#include "Texture.hpp"
 
 namespace tetrablocks {
 
@@ -39,7 +40,6 @@ namespace tetrablocks {
         glm::uint m_vao;
         glm::uint m_vbo;
         glm::uint m_color;
-        int m_texture;
         int m_type;
     };
 

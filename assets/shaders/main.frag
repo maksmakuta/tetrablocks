@@ -13,7 +13,7 @@ void main() {
     }else if(u_type == 2){
         f_color = texture(u_image,f_tex);
     }else if(u_type == 3){
-        f_color = vec4(u_color.rgb, texture(u_image,f_tex).r);
+        f_color = vec4(u_color.rgb, u_color.a * texture(u_image,f_tex).r);
     }else{
         discard;
     }

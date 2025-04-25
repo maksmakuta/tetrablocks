@@ -61,6 +61,7 @@ int main() {
         return -1;
     }
     auto game = tetrablocks::Game();
+    game.onResize(800,600);
     glfwSetWindowUserPointer(window,&game);
 
     glfwSetFramebufferSizeCallback(window, onResize);

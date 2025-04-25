@@ -40,6 +40,8 @@ namespace tetrablocks {
         ~Texture();
 
         void alloc(int w, int h, TextureFormat format,const void* buffer = nullptr);
+        void dealloc();
+
         void subdata(int x, int y,int w, int h, TextureFormat format, const void* buffer) const;
         void setWrap(TextureWrap st) const;
         void setWrap(TextureWrap s,TextureWrap t) const;
@@ -50,12 +52,14 @@ namespace tetrablocks {
         void genMipmaps() const;
 
         void bind(u_int8_t slot = 0) const;
+        void saveTo(const std::string& filename);
 
-        [[nodiscard]] glm::vec2 getSize() const;
+        [[nodiscard]] glm::uvec2 getSize() const;
         [[nodiscard]] glm::uint getID() const;
     private:
-        glm::vec2 m_size;
+        glm::uvec2 m_size;
         glm::uint m_handle;
+        uint8_t m_bpp;
 
     };
 

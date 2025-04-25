@@ -66,9 +66,9 @@ namespace tetrablocks {
     }
 
 
-    Texture::Texture() : m_size(0), m_handle(0){}
+    Texture::Texture() : m_size(0), m_handle(0), m_bpp(1){}
 
-    Texture::Texture(const std::string& path) : m_size(0), m_handle(0){
+    Texture::Texture(const std::string& path) : m_size(0), m_handle(0), m_bpp(1){
         std::vector<unsigned char> image;
         unsigned width, height;
         if(const unsigned error = lodepng::decode(image, width, height, path); error != 0) {
@@ -78,19 +78,33 @@ namespace tetrablocks {
         alloc(static_cast<int>(width),static_cast<int>(height),TextureFormat::RGBA,image.data());
     }
 
-    void Texture::alloc(const int w, const int h, const TextureFormat format, const void* buffer){
-        if (m_handle != 0) {
-            glDeleteTextures(1,&m_handle);
-        }
-        glGenTextures(1, &m_handle);
-        bind();
-        glTexImage2D(GL_TEXTURE_2D, 0, internal::toGL(format), w, h, 0, internal::toGL(format), GL_UNSIGNED_BYTE, buffer);
-        m_size = {w,h};
+    Texture::~Texture() {
+        dealloc();
     }
 
-    Texture::~Texture() {
-        glDeleteTextures(1,&m_handle);
-        m_size = {0,0};
+    void Texture::alloc(const int w, const int h, const TextureFormat format, const void* buffer){
+        glGenTextures(1, &m_handle);
+        glBindTexture(GL_TEXTURE_2D,m_handle);
+        glTexImage2D(GL_TEXTURE_2D, 0, internal::toGL(format), w, h, 0, internal::toGL(format), GL_UNSIGNED_BYTE, buffer);
+        m_size = {w,h};
+        switch (format) {
+            case TextureFormat::RGBA:
+                m_bpp = 4;
+                break;
+            case TextureFormat::RGB:
+                m_bpp = 3;
+                break;
+            case TextureFormat::Mono:
+                m_bpp = 1;
+                break;
+        }
+    }
+
+    void Texture::dealloc() {
+        if (m_handle != 0) {
+            glDeleteTextures(1,&m_handle);
+            m_size = {0,0};
+        }
     }
 
     void Texture::subdata(const int x, const int y, const int w, const int h, const TextureFormat format, const void* buffer) const {
@@ -140,15 +154,37 @@ namespace tetrablocks {
         }
     }
 
-    void Texture::bind(u_int8_t slot) const {
-        if (slot >= 16) {
-            slot = 0;
+    void Texture::bind(const u_int8_t slot) const {
+        if (slot < 16) {
+            glActiveTexture(GL_TEXTURE0 + slot);
         }
-        glActiveTexture(GL_TEXTURE0 + slot);
         glBindTexture(GL_TEXTURE_2D,m_handle);
     }
-    
-    glm::vec2 Texture::getSize() const{
+
+    void Texture::saveTo(const std::string &filename) {
+        int format;
+        LodePNGColorType pixel;
+        if (m_bpp == 1) {
+            format = GL_RED;
+            pixel = LCT_GREY;
+        }else if (m_bpp == 3) {
+            format = GL_RGB;
+            pixel = LCT_RGB;
+        }else if (m_bpp == 4) {
+            format = GL_RGBA;
+            pixel = LCT_RGBA;
+        }else {
+            std::cout << "Can't detect pixel parameters by bpp : " << m_bpp << std::endl;
+        }
+
+        std::vector<unsigned char> buffer(m_size.x * m_size.y * m_bpp);
+        bind(0);
+        glGetTexImage(GL_TEXTURE_2D, 0, format,GL_UNSIGNED_BYTE, buffer.data());
+        if (unsigned error = lodepng::encode(filename, buffer, m_size.x ,m_size.y, pixel))
+            std::cout << "encoder error " << error << ": " << lodepng_error_text(error) << std::endl;
+    }
+
+    glm::uvec2 Texture::getSize() const{
         return m_size;
     }
 

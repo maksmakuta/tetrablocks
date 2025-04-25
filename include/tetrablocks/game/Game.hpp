@@ -2,6 +2,7 @@
 #define GAME_HPP
 
 #include "tetrablocks/graphics/Renderer.hpp"
+#include "tetrablocks/graphics/Texture.hpp"
 
 namespace tetrablocks {
 
@@ -12,14 +13,14 @@ namespace tetrablocks {
 
         void onDraw();
         void onTick(float dt);
-
         void onResize(int w, int h);
         void onKey(int k, int a, int m);
         void onCursor(float x, float y);
     private:
+        void onRender(Renderer& r);
+
         Renderer m_renderer;
-        Font m_font;
-        Texture m_image;
+        Texture m_wall;
         glm::vec2 m{0};
     };
 
