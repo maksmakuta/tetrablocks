@@ -1,8 +1,9 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <list>
+
 #include "tetrablocks/graphics/Renderer.hpp"
-#include "tetrablocks/graphics/Texture.hpp"
 
 namespace tetrablocks {
 
@@ -30,8 +31,9 @@ namespace tetrablocks {
         Texture m_wall;
         glm::vec2 m{0};
 
-        std::vector<Rect> m_rects;
+        std::list<Rect> m_rects;
         glm::vec2 view{800,600};
+        double afps{144.0};
     };
 
 }
