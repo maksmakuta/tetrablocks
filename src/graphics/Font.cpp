@@ -1,81 +1,104 @@
 #include "tetrablocks/graphics/Font.hpp"
+
 #include <iostream>
 
 #include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include "glad/gl.h"
 
-#include FT_FREETYPE_H
-
 namespace tetrablocks {
 
-    Font::Font() = default;
+    Font::Font(const uint8_t size) : m_size(size){}
 
-    Font::~Font() {
-        if (!Characters.empty()) {
-            for (const auto&[_, c] : Characters) {
-                glDeleteTextures(1,&c.TextureID);
-            }
-            Characters.clear();
-        }
-    }
-
-    void Font::loadFont(const std::string &path, const int size) {
+    void Font::load(const std::string &path, const std::initializer_list<glm::ivec2>& ranges) {
         FT_Library ft;
         if (FT_Init_FreeType(&ft)){
-            std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+            std::cout << "Font: Cannot init Freetype library" << std::endl;
             return;
         }
 
         FT_Face face;
         if (FT_New_Face(ft, path.c_str(), 0, &face)) {
-            std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+            std::cout << "Font: Cannot load Freetype face from path : " << path << std::endl;
             return;
         }
 
-        FT_Set_Pixel_Sizes(face, 0, size);
+        FT_Set_Pixel_Sizes(face, 0, m_size);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        for (unsigned char c = 32; c < 128; c++)
-        {
-            // Load character glyph
-            if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-            {
-                std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-                continue;
-            }
-            // generate texture
-            unsigned int texture;
-            glGenTextures(1, &texture);
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RED,
-                face->glyph->bitmap.width,
-                face->glyph->bitmap.rows,
-                0,
-                GL_RED,
-                GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer
-            );
-            // set texture options
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            // now store character for later use
-            Character character = {
-                texture,
-                glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                static_cast<unsigned int>(face->glyph->advance.x)
-            };
-            Characters.insert(std::pair<char, Character>(c, character));
+        long amount = 0;
+        for (const auto& range : ranges) {
+            amount += range.y - range.x;
         }
-        glBindTexture(GL_TEXTURE_2D, 0);
+        std::cout << "Amount = " << amount << std::endl;
+        const auto area = amount * (m_size * m_size);
+        int side = 64;
+        while (side * side < area) {
+            side *= 2;
+        }
+        const auto tex = glm::vec2{static_cast<float>(side)};
+        std::cout << "Size = " << side << "x" << side << std::endl;
+
+        m_texture.alloc(side,side,TextureFormat::Mono,nullptr);
+
+        glm::ivec2 offset{1,1};
+        int h = -1;
+
+        for (const auto& range : ranges) {
+            for (auto c = range.x; c <= range.y; c++) {
+                if (FT_Load_Char(face, c, FT_LOAD_RENDER)){
+                    std::cout << "Can't load glyph : " << c << std::endl;
+                    continue;
+                }
+
+                if (offset.x + face->glyph->bitmap.width > side) {
+                    offset.x = 1;
+                    offset.y += h + 1;
+                    h = -1;
+                }
+
+                m_texture.subdata(
+                    offset.x,
+                    offset.y,
+                    static_cast<int>(face->glyph->bitmap.width),
+                    static_cast<int>(face->glyph->bitmap.rows),
+                    TextureFormat::Mono,
+                    face->glyph->bitmap.buffer
+                );
+
+                const glm::ivec2 size(face->glyph->bitmap.width, face->glyph->bitmap.rows);
+                const auto uv_a = glm::vec2(offset) / tex;
+                const auto uv_b = glm::vec2(offset + size) / tex;
+
+                Glyph character = {
+                    glm::u8vec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+                    glm::i8vec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                    static_cast<int>(face->glyph->advance.x >> 6),
+                    uv_a, uv_b
+                };
+                m_glyphs.insert(std::make_pair(c, character));
+
+                offset.x += static_cast<int>(face->glyph->bitmap.width) + 1;
+                h = std::max(h,static_cast<int>(face->glyph->bitmap.rows));
+            }
+        }
+
+        m_texture.setWrap(TextureWrap::ClampEdge);
+        m_texture.setMagFilter(TextureFilter::Linear);
+        m_texture.setMinFilter(TextureFilter::Linear);
+        m_texture.genMipmaps();
+
+        glBindTexture(GL_TEXTURE_2D,0);
 
         FT_Done_Face(face);
         FT_Done_FreeType(ft);
+    }
+
+    std::optional<Glyph> Font::at(const int i) {
+        if (m_glyphs.contains(i)) {
+            return m_glyphs.at(i);
+        }
+        return std::nullopt;
     }
 }

@@ -77,6 +77,7 @@ int main() {
         lastTime = now;
         glfwPollEvents();
 
+
         game.onDraw();
         glfwSwapBuffers(window);
     }

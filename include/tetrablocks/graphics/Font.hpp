@@ -1,26 +1,37 @@
 #ifndef FONT_HPP
 #define FONT_HPP
+
 #include <map>
+#include <optional>
 #include <string>
 #include <glm/vec2.hpp>
 
+#include "Texture.hpp"
+
 namespace tetrablocks {
+
+    struct Glyph {
+        glm::u8vec2 size;
+        glm::i8vec2 offset;
+        int advance;
+        glm::vec2 uv_a;
+        glm::vec2 uv_b;
+    };
+
+    namespace Codepoint {
+        constexpr auto Latin = glm::ivec2{32,127};
+    }
 
     class Font {
     public:
-        Font();
-        ~Font();
+        explicit Font(uint8_t size = 24);
+        void load(const std::string& path,const std::initializer_list<glm::ivec2>& codepoints = { Codepoint::Latin });
+        std::optional<Glyph> at(int i);
 
-        void loadFont(const std::string& path, int size = 24);
-
-        struct Character {
-            unsigned int TextureID; // ID handle of the glyph texture
-            glm::ivec2   Size;      // Size of glyph
-            glm::ivec2   Bearing;   // Offset from baseline to left/top of glyph
-            unsigned int Advance;   // Horizontal offset to advance to next glyph
-        };
-
-        std::map<char, Character> Characters;
+    private:
+        std::map<int, Glyph> m_glyphs;
+        Texture m_texture;
+        uint8_t m_size;
     };
 
 }

@@ -1,5 +1,7 @@
 #include "tetrablocks/Utils.hpp"
 
+#include <random>
+
 namespace tetrablocks {
 
     void forXY(const glm::uvec2& size, const std::function<void(const glm::uvec2&)>& fn) {
@@ -14,4 +16,16 @@ namespace tetrablocks {
         return std::string(ASSETS_DIR) + path;
     }
 
+    glm::vec2 random(const glm::vec2& min, const glm::vec2& max) {
+        std::random_device rd;
+        std::uniform_real_distribution ux{min.x, max.x};
+        std::uniform_real_distribution uy{min.y, max.y};
+        return {ux(rd),uy(rd)};
+    }
+
+    glm::uint randColor() {
+        std::random_device rd;
+        std::uniform_int_distribution u{0,255};
+        return (0xFF << 24) | (u(rd) << 16) | (u(rd) << 8) | u(rd);
+    }
 }
