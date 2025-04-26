@@ -39,3 +39,6 @@ add_executable(tetrablocks
 target_link_libraries(tetrablocks PUBLIC glfw OpenGL::GL GLAD LodePNG glm::glm Freetype::Freetype)
 target_include_directories(tetrablocks PUBLIC include)
 target_compile_definitions(tetrablocks PUBLIC ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets")
+
+find_package(TBB REQUIRED)
+target_link_libraries(tetrablocks PRIVATE TBB::tbb)

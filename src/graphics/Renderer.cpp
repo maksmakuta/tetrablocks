@@ -9,6 +9,8 @@
 namespace tetrablocks {
 
     Renderer::Renderer() : m_vao(0), m_vbo(0), m_color(0xFF000000), m_type(1) {
+        glActiveTexture(GL_TEXTURE0);
+
         glGenVertexArrays(1, &m_vao);
         glGenBuffers(1, &m_vbo);
 
@@ -53,7 +55,57 @@ namespace tetrablocks {
     }
 
     void Renderer::drawText(const Font& fnt, const std::string& text, const glm::vec2& pos, const glm::uint& col, const Align& align) {
+        glBindVertexArray(m_vao);
+        m_type = 3;
+        glm::vec2 p = pos;
+        constexpr auto scale = 1.f;
 
+        const glm::vec4 color{
+            static_cast<float>(col >> 16 & 0xFF) / 255.f,
+            static_cast<float>(col >> 8  & 0xFF) / 255.f,
+            static_cast<float>(col >> 0  & 0xFF) / 255.f,
+            static_cast<float>(col >> 24 & 0xFF) / 255.f,
+        };
+        m_shader.setInt("u_image",0);
+        m_shader.setVec4("u_color",color);
+        m_shader.setInt("u_type",m_type);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        for (char c : text) {
+            Font::Character ch = fnt.Characters.at(c);
+
+            float xpos = p.x + ch.Bearing.x * scale;
+            float ypos = p.y - ch.Bearing.y * scale;
+
+            float w = ch.Size.x * scale;
+            float h = ch.Size.y * scale;
+            // update VBO for each character
+            float vertices[6][4] = {
+                { xpos,     ypos + h,   0.0f, 1.0f },
+                { xpos,     ypos,       0.0f, 0.0f },
+                { xpos + w, ypos,       1.0f, 0.0f },
+
+                { xpos,     ypos + h,   0.0f, 1.0f },
+                { xpos + w, ypos,       1.0f, 0.0f },
+                { xpos + w, ypos + h,   1.0f, 1.0f }
+            };
+
+            glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+
+            glBindVertexArray(m_vao);
+            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+
+            p.x += static_cast<float>(ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+        }
+
+        glDisable(GL_BLEND);
+        glBindVertexArray(0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     void Renderer::drawRect(const float x, const float y, const float w, const float h, const glm::uint& col) {
@@ -74,14 +126,14 @@ namespace tetrablocks {
         push();
     }
 
-    void Renderer::drawImage(const float x, const float y, const float w, const float h,  const Texture& tex) {
+    void Renderer::drawImage(const float x, const float y, const float w, const float h,  const Texture& tex, const glm::vec2& uv_a, const glm::vec2& uv_b) {
         const auto vertices = std::vector<Vertex>{
-                { glm::vec2{x,     y + h},   {0.f,1.f}},
-                { glm::vec2{x,     y    },   {0.f,0.f}},
-                { glm::vec2{x + w, y    },   {1.f,0.f}},
-                { glm::vec2{x,     y + h},   {0.f,1.f}},
-                { glm::vec2{x + w, y    },   {1.f,0.f}},
-                { glm::vec2{x + w, y + h},   {1.f,1.f}}
+                { glm::vec2{x,     y + h},   {uv_a.x,uv_b.y}},
+                { glm::vec2{x,     y    },   {uv_a.x,uv_a.y}},
+                { glm::vec2{x + w, y    },   {uv_b.x,uv_a.y}},
+                { glm::vec2{x,     y + h},   {uv_a.x,uv_b.y}},
+                { glm::vec2{x + w, y    },   {uv_b.x,uv_a.y}},
+                { glm::vec2{x + w, y + h},   {uv_b.x,uv_b.y}}
         };
         m_vertices.insert(m_vertices.end(),vertices.begin(), vertices.end());
 
@@ -104,7 +156,7 @@ namespace tetrablocks {
         m_shader.setVec4("u_color",col);
         m_shader.setInt("u_image",0);
 
-        if (m_type == 1) {
+        if (m_type != 1) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
@@ -115,7 +167,7 @@ namespace tetrablocks {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(m_vertices.size()));
 
-        if (m_type == 3) {
+        if (m_type != 1) {
             glDisable(GL_BLEND);
         }
 

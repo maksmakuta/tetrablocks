@@ -7,7 +7,6 @@
 
 namespace tetrablocks {
 
-
     enum class TextureWrap {
         Repeat,
         RepeatMirror,
@@ -52,7 +51,7 @@ namespace tetrablocks {
         void genMipmaps() const;
 
         void bind(u_int8_t slot = 0) const;
-        void saveTo(const std::string& filename);
+        void saveTo(const std::string& filename) const;
 
         [[nodiscard]] glm::uvec2 getSize() const;
         [[nodiscard]] glm::uint getID() const;

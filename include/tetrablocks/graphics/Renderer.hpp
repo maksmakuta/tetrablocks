@@ -30,7 +30,7 @@ namespace tetrablocks {
 
         void drawText(const Font& fnt, const std::string& text, const glm::vec2& pos, const glm::uint& col = 0xFFFFFFFF, const Align& = Align::Start);
         void drawRect(float x,float y,float w,float h, const glm::uint& col);
-        void drawImage(float x,float y,float w,float h, const Texture& tex);
+        void drawImage(float x,float y,float w,float h, const Texture& tex, const glm::vec2& uv_a = {0,0}, const glm::vec2& uv_b = {1,1});
         void push();
 
     private:

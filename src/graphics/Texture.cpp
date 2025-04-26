@@ -161,7 +161,7 @@ namespace tetrablocks {
         glBindTexture(GL_TEXTURE_2D,m_handle);
     }
 
-    void Texture::saveTo(const std::string &filename) {
+    void Texture::saveTo(const std::string &filename) const {
         int format;
         LodePNGColorType pixel;
         if (m_bpp == 1) {
