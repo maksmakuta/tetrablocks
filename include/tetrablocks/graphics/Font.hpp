@@ -10,6 +10,16 @@
 
 namespace tetrablocks {
 
+    namespace Codepoint {
+        constexpr auto Latin = glm::ivec2{32,127};
+    }
+
+    enum class Align : uint8_t{
+        Center,
+        Start,
+        End
+    };
+
     struct Glyph {
         glm::u8vec2 size;
         glm::i8vec2 offset;
@@ -18,14 +28,13 @@ namespace tetrablocks {
         glm::vec2 uv_b;
     };
 
-    namespace Codepoint {
-        constexpr auto Latin = glm::ivec2{32,127};
-    }
-
     class Font {
     public:
         explicit Font(uint8_t size = 24);
-        void load(const std::string& path,const std::initializer_list<glm::ivec2>& codepoints = { Codepoint::Latin });
+        void load(
+            const std::string& path,
+            const std::initializer_list<glm::ivec2>& codepoints = { Codepoint::Latin }
+        );
         std::optional<Glyph> at(int i);
 
     private:

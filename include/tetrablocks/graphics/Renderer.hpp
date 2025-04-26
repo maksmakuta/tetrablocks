@@ -9,15 +9,15 @@
 
 namespace tetrablocks {
 
-    struct Vertex {
-        glm::vec2 pos;
-        glm::vec2 tex;
-    };
+    using HexColor = glm::uint;
+    using OrthoMatrix = std::pair<glm::vec3,glm::vec3>;
 
-    enum class Align : uint8_t{
-        Center,
-        Start,
-        End
+    struct Vertex {
+        glm::uint pos_type;
+        glm::uint col;
+        glm::uint tex;
+
+        Vertex(int type, const glm::vec2& pos, const HexColor& color, const glm::vec2& uv);
     };
 
     class Renderer {
@@ -26,21 +26,24 @@ namespace tetrablocks {
         ~Renderer();
 
         void resize(int w,int h);
-        void clear(const glm::uint& color = 0xFF000000);
+        void clear(const HexColor& color = 0xFF000000);
 
-        void drawText(const Font& fnt, const std::string& text, const glm::vec2& pos, const glm::uint& col = 0xFFFFFFFF, const Align& = Align::Start);
-        void drawRect(float x,float y,float w,float h, const glm::uint& col);
-        void drawImage(float x,float y,float w,float h, const Texture& tex, const glm::vec2& uv_a = {0,0}, const glm::vec2& uv_b = {1,1});
-        void push();
+        void beginFrame();
+        void endFrame();
+
+        void fill(const HexColor& col = 0xFFFFFFFF);
+        void image(const Texture& tex, const glm::vec2& uv_a = {0,0}, const glm::vec2& uv_b = {1,1});
+
+        void rect(float x,float y,float w,float h);
+        void text(const Font& fnt, const std::string& text, const glm::vec2& pos, const Align& = Align::Start);
 
     private:
-        glm::mat4 m_matrix{1.f};
-        std::vector<Vertex> m_vertices;
+        std::vector<Vertex> m_data;
+        OrthoMatrix m_matrix;
         Shader m_shader;
         glm::uint m_vao;
         glm::uint m_vbo;
-        glm::uint m_color;
-        int m_type;
+        int m_paint;
     };
 
 }
