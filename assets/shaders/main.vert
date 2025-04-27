@@ -1,4 +1,4 @@
-#version 460 core
+#version 330 core
 
 layout(location = 0) in uint pos_type;
 layout(location = 1) in uint col;
@@ -6,7 +6,7 @@ layout(location = 2) in uint tex;
 
 uniform mat4 u_mat;
 
-out uint f_type;
+flat out uint f_type;
 out vec4 f_col;
 out vec2 f_tex;
 
@@ -25,8 +25,8 @@ void main() {
     );
 
     f_tex = vec2(
-        (tex >> 16u) & 0xFFFFu,
-        (tex >> 0u)  & 0xFFFFu
+        float((tex >> 16u) & 0xFFFFu) / float(0xFFFFu),
+        float((tex >> 0u)  & 0xFFFFu) / float(0xFFFFu)
     );
 
     gl_Position = u_mat * vec4(pos, 0.0, 1.0);

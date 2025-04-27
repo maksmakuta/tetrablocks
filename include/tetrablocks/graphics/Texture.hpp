@@ -36,7 +36,6 @@ namespace tetrablocks {
     public:
         Texture();
         explicit Texture(const std::string& path);
-        ~Texture();
 
         void set(const glm::vec2& size, glm::uint handle, uint8_t bpp);
 

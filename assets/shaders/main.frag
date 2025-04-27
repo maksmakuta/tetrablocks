@@ -1,4 +1,4 @@
-#version 460 core
+#version 330 core
 
 flat in uint f_type;
 in vec4 f_col;
@@ -9,12 +9,12 @@ uniform sampler2D u_image;
 out vec4 f_color;
 
 void main() {
-    if(f_type == 1){
+    if(f_type == 1u){
         f_color = f_col;
-    }else if(f_type == 2){
+    }else if(f_type == 2u){
         f_color = texture(u_image,f_tex);
-    }else if(f_type == 3){
-        f_color = vec4(f_col.rgb, f_col.a * texture(u_image,f_tex).r);
+    }else if(f_type == 3u){
+        f_color = vec4(f_col.rgb, texture(u_image,f_tex).r);
     }else{
         discard;
     }

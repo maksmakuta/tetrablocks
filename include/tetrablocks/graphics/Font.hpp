@@ -37,6 +37,8 @@ namespace tetrablocks {
             const std::initializer_list<glm::ivec2>& codepoints = { Codepoint::Latin }
         );
 
+        void clear();
+
         [[nodiscard]] std::optional<Glyph> at(int i) const;
         [[nodiscard]] Texture getTexture() const;
 

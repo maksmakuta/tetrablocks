@@ -1,6 +1,5 @@
 #include "tetrablocks/graphics/Renderer.hpp"
 
-#include <filesystem>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -35,14 +34,14 @@ namespace tetrablocks {
 
         col = color;
 
-        const auto uvX = static_cast<uint16_t>(uv.x);
-        const auto uvY = static_cast<uint16_t>(uv.y);
+        const auto uvX = static_cast<uint16_t>(uv.x * static_cast<float>(0xFFFF));
+        const auto uvY = static_cast<uint16_t>(uv.y * static_cast<float>(0xFFFF));
 
         tex = (static_cast<glm::uint>(uvX) << 16) |
               (static_cast<glm::uint>(uvY));
     }
 
-    Renderer::Renderer() : m_data(1024), m_uv(0, 0, 1, 1), m_vao(0), m_vbo(0), m_texture(0), m_color(0), m_paint(0) {
+    Renderer::Renderer() : m_data(1024), m_uv(0, 0, 1, 1), m_vao(0), m_vbo(0), m_color(0), m_paint(0) {
         m_shader.loadFromFiles(
             getAsset("/shaders/main.vert"),
             getAsset("/shaders/main.frag")
@@ -71,12 +70,9 @@ namespace tetrablocks {
     void Renderer::resize(const int w, const int h) {
         glViewport(0,0,w,h);
 
-        const auto bottom = static_cast<float>(h);
-        const auto right = static_cast<float>(w);
-
         glm::vec3 scales{
-            2.f / right,
-            2.f / -bottom,
+            2.f / static_cast<float>(w),
+            2.f / static_cast<float>(-h),
             2.f,
         };
 
@@ -87,6 +83,8 @@ namespace tetrablocks {
         };
 
         m_matrix = std::make_pair(scales, offsets);
+        m_shader.setMat4("u_mat",toMat4(m_matrix));
+
     }
 
     void Renderer::clear(const glm::uint &color) {
@@ -109,17 +107,18 @@ namespace tetrablocks {
     void Renderer::fill(const glm::uint& col) {
         if (m_paint != 1) {
             flush();
+            m_paint = 1;
         }
-        m_paint = 1;
         m_color = col;
     }
 
     void Renderer::image(const Texture& tex, const glm::vec2& uv_a, const glm::vec2& uv_b) {
-        if (m_paint != 2 || tex.getID() != m_texture) {
+        if (m_paint != 2) {
             flush();
+            m_paint = 2;
         }
-        m_paint = 2;
-        m_texture = tex.getID();
+        glBindTexture(GL_TEXTURE_2D,tex.getID());
+        m_shader.setInt("u_image",0);
         m_uv = {uv_a,uv_b};
     }
 
@@ -136,11 +135,13 @@ namespace tetrablocks {
     }
 
     void Renderer::text(const Font& fnt, const std::string& text, const glm::vec2& pos, const Align&) {
-        if (m_paint != 3 && !m_data.empty()) {
+        if (m_paint != 3) {
             flush();
+            m_paint = 3;
         }
-        m_paint = 3;
-        m_texture = fnt.getTexture().getID();
+        glBindTexture(GL_TEXTURE_2D,fnt.getTexture().getID());
+        m_shader.setInt("u_image",0);
+
         glm::vec2 p = pos;
 
         for(const auto& c : text) {
@@ -157,7 +158,7 @@ namespace tetrablocks {
                     Vertex(m_paint,{x+w,y+h},m_color,{g->uv_b.x,g->uv_b.y}),
 
                     Vertex(m_paint,{x  ,y  },m_color,{g->uv_a.x,g->uv_a.y}),
-                    Vertex(m_paint,{x+w,y+h},m_color,{g->uv_b.x,g->uv_a.y}),
+                    Vertex(m_paint,{x+w,y+h},m_color,{g->uv_b.x,g->uv_b.y}),
                     Vertex(m_paint,{x  ,y+h},m_color,{g->uv_a.x,g->uv_b.y}),
                 });
 
@@ -170,14 +171,10 @@ namespace tetrablocks {
         if (m_data.empty() || m_paint == 0)
             return;
 
-        glBindTexture(GL_TEXTURE_2D,m_texture);
-        m_shader.setMat4("u_mat",toMat4(m_matrix));
-        m_shader.setInt("u_image",0);
-
-        // if (m_paint == 3) {
+        if (m_paint == 3) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        // }
+        }
 
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -185,9 +182,9 @@ namespace tetrablocks {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(m_data.size()));
 
-        // if (m_paint == 3) {
+        if (m_paint == 3) {
             glDisable(GL_BLEND);
-        // }
+        }
 
         m_data.clear();
     }

@@ -82,10 +82,6 @@ namespace tetrablocks {
         genMipmaps();
     }
 
-    Texture::~Texture() {
-        dealloc();
-    }
-
     void Texture::set(const glm::vec2 &size, glm::uint handle, uint8_t bpp) {
         m_size = size;
         m_handle = handle;

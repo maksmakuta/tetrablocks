@@ -48,7 +48,6 @@ namespace tetrablocks {
         glm::vec4 m_uv;
         glm::uint m_vao;
         glm::uint m_vbo;
-        glm::uint m_texture;
         glm::uint m_color;
         int m_paint;
     };

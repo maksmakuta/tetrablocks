@@ -39,10 +39,10 @@ int main() {
         return -1;
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_SAMPLES, 8);
+//    glfwWindowHint(GLFW_SAMPLES, 2);
     //glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER,GLFW_TRUE);
 #if __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for macOS
@@ -71,6 +71,7 @@ int main() {
     glfwSetMouseButtonCallback(window,onButton);
 
     auto lastTime = glfwGetTime();
+    game.init();
     while (!glfwWindowShouldClose(window)) {
         const auto now = glfwGetTime();
         game.onTick(static_cast<float>(now - lastTime));
@@ -81,6 +82,7 @@ int main() {
         game.onDraw();
         glfwSwapBuffers(window);
     }
+    game.clear();
 
     glfwDestroyWindow(window);
     glfwTerminate();

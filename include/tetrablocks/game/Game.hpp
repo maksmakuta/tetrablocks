@@ -1,22 +1,17 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <list>
-
 #include "tetrablocks/graphics/Renderer.hpp"
 
 namespace tetrablocks {
-
-    struct Rect {
-        glm::vec2 pos;
-        glm::vec2 vel;
-        glm::uint color;
-    };
 
     class Game {
     public:
         Game();
         ~Game();
+
+        void init();
+        void clear();
 
         void onDraw();
         void onTick(float dt);
@@ -28,11 +23,9 @@ namespace tetrablocks {
 
         Renderer m_renderer;
         Font m_font;
+        Texture m_test;
         glm::vec2 m{0};
-
-        std::list<Rect> m_rects;
         glm::vec2 view{800,600};
-        double afps{144.0};
     };
 
 }

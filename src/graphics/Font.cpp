@@ -81,13 +81,21 @@ namespace tetrablocks {
             }
         }
 
+        m_texture.genMipmaps();
         m_texture.setWrap(TextureWrap::ClampEdge);
         m_texture.setMinFilter(TextureFilter::Linear);
         m_texture.setMagFilter(TextureFilter::Linear);
-        m_texture.genMipmaps();
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
         FT_Done_Face(face);
         FT_Done_FreeType(ft);
+    }
+
+    void Font::clear() {
+        m_glyphs.clear();
+        m_texture.dealloc();
+        m_size = 0;
     }
 
     std::optional<Glyph> Font::at(const int i) const{
