@@ -38,7 +38,9 @@ namespace tetrablocks {
         explicit Texture(const std::string& path);
         ~Texture();
 
-        void alloc(int w, int h, TextureFormat format,const void* buffer = nullptr);
+        void set(const glm::vec2& size, glm::uint handle, uint8_t bpp);
+
+        void alloc(int w, int h, TextureFormat format, const void* buffer = nullptr);
         void dealloc();
 
         void subdata(int x, int y,int w, int h, TextureFormat format, const void* buffer) const;

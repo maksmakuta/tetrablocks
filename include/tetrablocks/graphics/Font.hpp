@@ -12,6 +12,7 @@ namespace tetrablocks {
 
     namespace Codepoint {
         constexpr auto Latin = glm::ivec2{32,127};
+        //you can add more codepoints and add logic to calculate char codes from UTF string
     }
 
     enum class Align : uint8_t{
@@ -35,7 +36,9 @@ namespace tetrablocks {
             const std::string& path,
             const std::initializer_list<glm::ivec2>& codepoints = { Codepoint::Latin }
         );
-        std::optional<Glyph> at(int i);
+
+        [[nodiscard]] std::optional<Glyph> at(int i) const;
+        [[nodiscard]] Texture getTexture() const;
 
     private:
         std::map<int, Glyph> m_glyphs;

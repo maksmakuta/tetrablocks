@@ -13,8 +13,8 @@ out vec2 f_tex;
 void main() {
     f_type = (pos_type >> 30u) & 0x3u;
     vec2 pos = vec2(
-        (pos_type >> 15u) & 0x7FFFu,
-        pos_type & 0x7FFFu
+        int((pos_type >> 15u) & 0x7FFFu) - (1 << 14),
+        int(pos_type & 0x7FFFu) - (1 << 14)
     );
 
     f_col = vec4(
@@ -29,5 +29,5 @@ void main() {
         (tex >> 0u)  & 0xFFFFu
     );
 
-    gl_Position = u_mat * vec4(f_pos, 0.0, 1.0);
+    gl_Position = u_mat * vec4(pos, 0.0, 1.0);
 }

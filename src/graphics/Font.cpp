@@ -31,16 +31,14 @@ namespace tetrablocks {
         for (const auto& range : ranges) {
             amount += range.y - range.x;
         }
-        std::cout << "Amount = " << amount << std::endl;
         const auto area = amount * (m_size * m_size);
         int side = 64;
         while (side * side < area) {
             side *= 2;
         }
         const auto tex = glm::vec2{static_cast<float>(side)};
-        std::cout << "Size = " << side << "x" << side << std::endl;
 
-        m_texture.alloc(side,side,TextureFormat::Mono,nullptr);
+        m_texture.alloc(side,side,TextureFormat::Mono);
 
         glm::ivec2 offset{1,1};
         int h = -1;
@@ -59,8 +57,7 @@ namespace tetrablocks {
                 }
 
                 m_texture.subdata(
-                    offset.x,
-                    offset.y,
+                    offset.x,offset.y,
                     static_cast<int>(face->glyph->bitmap.width),
                     static_cast<int>(face->glyph->bitmap.rows),
                     TextureFormat::Mono,
@@ -85,20 +82,22 @@ namespace tetrablocks {
         }
 
         m_texture.setWrap(TextureWrap::ClampEdge);
-        m_texture.setMagFilter(TextureFilter::Linear);
         m_texture.setMinFilter(TextureFilter::Linear);
+        m_texture.setMagFilter(TextureFilter::Linear);
         m_texture.genMipmaps();
-
-        glBindTexture(GL_TEXTURE_2D,0);
 
         FT_Done_Face(face);
         FT_Done_FreeType(ft);
     }
 
-    std::optional<Glyph> Font::at(const int i) {
+    std::optional<Glyph> Font::at(const int i) const{
         if (m_glyphs.contains(i)) {
             return m_glyphs.at(i);
         }
         return std::nullopt;
+    }
+
+    Texture Font::getTexture() const{
+        return m_texture;
     }
 }

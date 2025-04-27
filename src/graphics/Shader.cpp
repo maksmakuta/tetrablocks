@@ -108,4 +108,8 @@ namespace tetrablocks {
         glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
+    glm::uint Shader::id() const {
+        return m_id;
+    }
+
 }

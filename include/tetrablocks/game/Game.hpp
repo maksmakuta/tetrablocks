@@ -28,7 +28,6 @@ namespace tetrablocks {
 
         Renderer m_renderer;
         Font m_font;
-        Texture m_wall;
         glm::vec2 m{0};
 
         std::list<Rect> m_rects;

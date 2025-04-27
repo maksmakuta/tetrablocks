@@ -17,6 +17,7 @@ namespace tetrablocks {
         glm::uint col;
         glm::uint tex;
 
+        Vertex() = default;
         Vertex(int type, const glm::vec2& pos, const HexColor& color, const glm::vec2& uv);
     };
 
@@ -38,11 +39,17 @@ namespace tetrablocks {
         void text(const Font& fnt, const std::string& text, const glm::vec2& pos, const Align& = Align::Start);
 
     private:
+
+        void flush();
+
         std::vector<Vertex> m_data;
         OrthoMatrix m_matrix;
         Shader m_shader;
+        glm::vec4 m_uv;
         glm::uint m_vao;
         glm::uint m_vbo;
+        glm::uint m_texture;
+        glm::uint m_color;
         int m_paint;
     };
 

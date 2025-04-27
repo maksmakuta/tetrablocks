@@ -76,10 +76,20 @@ namespace tetrablocks {
             return;
         }
         alloc(static_cast<int>(width),static_cast<int>(height),TextureFormat::RGBA,image.data());
+        setWrap(TextureWrap::Repeat);
+        setMinFilter(TextureMinFilter::LinearLinear);
+        setMagFilter(TextureFilter::Linear);
+        genMipmaps();
     }
 
     Texture::~Texture() {
         dealloc();
+    }
+
+    void Texture::set(const glm::vec2 &size, glm::uint handle, uint8_t bpp) {
+        m_size = size;
+        m_handle = handle;
+        m_bpp = bpp;
     }
 
     void Texture::alloc(const int w, const int h, const TextureFormat format, const void* buffer){
@@ -110,6 +120,8 @@ namespace tetrablocks {
     void Texture::subdata(const int x, const int y, const int w, const int h, const TextureFormat format, const void* buffer) const {
         if (m_handle != 0){
             glTexSubImage2D(GL_TEXTURE_2D,0,x,y,w,h,internal::toGL(format),GL_UNSIGNED_BYTE, buffer);
+        } else {
+            std::cout << "no texture" << std::endl;
         }
     }
 
@@ -121,44 +133,60 @@ namespace tetrablocks {
         if (m_handle != 0){
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, internal::toGL(s));
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, internal::toGL(t));
+        } else {
+            std::cout << "no texture" << std::endl;
         }
     }
 
     void Texture::setMinFilter(const TextureFilter f) const {
         if (m_handle != 0) {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, internal::toGL(f));
+        } else {
+            std::cout << "no texture" << std::endl;
         }
     }
 
     void Texture::setMinFilter(const TextureMinFilter f) const {
         if (m_handle != 0) {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, internal::toGL(f));
+        } else {
+            std::cout << "no texture" << std::endl;
         }
     }
 
     void Texture::setMagFilter(const TextureFilter f) const {
         if (m_handle != 0) {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, internal::toGL(f));
+        } else {
+            std::cout << "no texture" << std::endl;
         }
     }
 
     void Texture::setBorder(const glm::vec4& color) const {
         if (m_handle != 0) {
             glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &color[0]);
+        } else {
+            std::cout << "no texture" << std::endl;
         }
     }
 
     void Texture::genMipmaps() const {
         if (m_handle != 0) {
             glGenerateMipmap(GL_TEXTURE_2D);
+        } else {
+            std::cout << "no texture" << std::endl;
         }
     }
 
     void Texture::bind(const u_int8_t slot) const {
-        if (slot < 16) {
-            glActiveTexture(GL_TEXTURE0 + slot);
+        if (m_handle != 0){
+            if (slot < 16) {
+                glActiveTexture(GL_TEXTURE0 + slot);
+            }
+            glBindTexture(GL_TEXTURE_2D,m_handle);
+        } else {
+            std::cout << "no texture" << std::endl;
         }
-        glBindTexture(GL_TEXTURE_2D,m_handle);
     }
 
     void Texture::saveTo(const std::string &filename) const {
@@ -175,12 +203,13 @@ namespace tetrablocks {
             pixel = LCT_RGBA;
         }else {
             std::cout << "Can't detect pixel parameters by bpp : " << m_bpp << std::endl;
+            return;
         }
 
         std::vector<unsigned char> buffer(m_size.x * m_size.y * m_bpp);
         bind(0);
         glGetTexImage(GL_TEXTURE_2D, 0, format,GL_UNSIGNED_BYTE, buffer.data());
-        if (unsigned error = lodepng::encode(filename, buffer, m_size.x ,m_size.y, pixel))
+        if (const unsigned error = lodepng::encode(filename, buffer, m_size.x ,m_size.y, pixel))
             std::cout << "encoder error " << error << ": " << lodepng_error_text(error) << std::endl;
     }
 

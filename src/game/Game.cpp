@@ -8,17 +8,11 @@
 namespace tetrablocks {
 
     constexpr auto size = glm::vec2{64,64};
-    constexpr auto color = 0xFF808080;
     constexpr auto speed = 300.f;
 
-    Game::Game() : m_font(24), m_wall(getAsset("/textures/wall.png")) {
-        m_wall.bind();
-        m_wall.setWrap(TextureWrap::Repeat);
-        m_wall.setMinFilter(TextureMinFilter::LinearLinear);
-        m_wall.setMagFilter(TextureFilter::Linear);
-        m_wall.genMipmaps();
-
+    Game::Game() : m_font(24){
         m_font.load(getAsset("/fonts/Constance.otf"));
+        m_font.getTexture().saveTo("atlas64.png");
 
         m_rects.emplace_back(random({0, 0},{800, 600}),random(), randColor());
     }
@@ -42,10 +36,10 @@ namespace tetrablocks {
         }
         afps += 1.0 / dt;
         afps /= 2.0;
-        if (afps > 60.0) {
-            for (int i = 0; i < 5;i++)
-                m_rects.emplace_back(random({0, 0},view),random(), randColor());
-        }
+        //if (afps > 60.0) {
+        //    for (int i = 0; i < 5;i++)
+        //        m_rects.emplace_back(random({0, 0},view),random(), randColor());
+        //}
     }
 
     void Game::onResize(const int w, const int h) {
@@ -63,11 +57,15 @@ namespace tetrablocks {
 
     void Game::onRender(Renderer &r) {
         r.clear(0xFF202020);
-        for (auto& c : m_rects) {
-            r.fill(c.color);
-            r.rect(c.pos.x,c.pos.y,size.x,size.y);
-        }
-        r.fill(0xFFFF0000);
-        r.text(m_font,std::format("Rects: {}",m_rects.size()),{0,32});
+        //for (auto& c : m_rects) {
+        //    r.fill(c.color);
+        //    r.rect(c.pos.x,c.pos.y,size.x,size.y);
+        //}
+        r.fill(0xFFFFFFFF);
+        r.text(m_font,std::format("rect: {}",m_rects.size()),m);
+
+        r.image(m_font.getTexture());
+        r.rect(0,0,512,512);
+
     }
 }

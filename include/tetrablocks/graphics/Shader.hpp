@@ -25,10 +25,10 @@ namespace tetrablocks {
         void setMat3(const std::string& name, const glm::mat3& mat) const;
         void setMat4(const std::string& name, const glm::mat4& mat) const;
 
-        [[nodiscard]] glm::uint id() const { return m_id; }
+        [[nodiscard]] glm::uint id() const;
 
     private:
-        glm::uint m_id = 0;
+        glm::uint m_id{0};
     };
 
 }
