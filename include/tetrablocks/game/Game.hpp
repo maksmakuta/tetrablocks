@@ -1,14 +1,17 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <memory>
+
+#include "core/IScreen.hpp"
 #include "tetrablocks/graphics/Renderer.hpp"
 
 namespace tetrablocks {
 
-    class Game {
+    class Game final : public IController{
     public:
         Game();
-        ~Game();
+        ~Game() override;
 
         void init();
         void clear();
@@ -18,14 +21,16 @@ namespace tetrablocks {
         void onResize(int w, int h);
         void onKey(int k, int a, int m);
         void onCursor(float x, float y);
-    private:
-        void onRender(Renderer& r);
 
+        void go(IScreen *screen) override;
+        void show(IDialog *dialog) override;
+        void hide() override;
+
+    private:
         Renderer m_renderer;
-        Font m_font;
-        Texture m_test;
-        glm::vec2 m{0};
-        glm::vec2 view{800,600};
+        std::unique_ptr<IScreen> m_screen;
+        std::unique_ptr<IDialog> m_dialog;
+        glm::ivec2 m_view{0};
     };
 
 }

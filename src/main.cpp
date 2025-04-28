@@ -62,6 +62,7 @@ int main() {
         return -1;
     }
     auto game = tetrablocks::Game();
+    game.init();
     game.onResize(800,600);
     glfwSetWindowUserPointer(window,&game);
 
@@ -71,7 +72,6 @@ int main() {
     glfwSetMouseButtonCallback(window,onButton);
 
     auto lastTime = glfwGetTime();
-    game.init();
     while (!glfwWindowShouldClose(window)) {
         const auto now = glfwGetTime();
         game.onTick(static_cast<float>(now - lastTime));

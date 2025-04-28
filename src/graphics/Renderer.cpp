@@ -63,6 +63,9 @@ namespace tetrablocks {
         glBindVertexArray(0);
 
         glActiveTexture(GL_TEXTURE0);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     Renderer::~Renderer() = default;
@@ -171,20 +174,11 @@ namespace tetrablocks {
         if (m_data.empty() || m_paint == 0)
             return;
 
-        if (m_paint == 3) {
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        }
-
         glBindVertexArray(m_vao);
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glBufferData(GL_ARRAY_BUFFER, static_cast<int>(m_data.size() * sizeof(Vertex)), m_data.data(), GL_DYNAMIC_COPY);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(m_data.size()));
-
-        if (m_paint == 3) {
-            glDisable(GL_BLEND);
-        }
 
         m_data.clear();
     }

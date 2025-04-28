@@ -34,6 +34,11 @@ add_executable(tetrablocks
         src/model/Shape.cpp
         src/Utils.cpp
         src/main.cpp
+        include/tetrablocks/game/screen/ScreenMain.hpp
+        include/tetrablocks/game/core/IScreen.hpp
+        src/game/screen/ScreenMain.cpp
+        include/tetrablocks/game/core/IController.hpp
+        include/tetrablocks/game/core/IDialog.hpp
 )
 
 target_link_libraries(tetrablocks PUBLIC glfw OpenGL::GL GLAD LodePNG glm::glm Freetype::Freetype)

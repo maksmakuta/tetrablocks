@@ -1,57 +1,90 @@
 #include "tetrablocks/game/Game.hpp"
 
-#include <format>
+#include <iostream>
 
-#include "tetrablocks/Utils.hpp"
+#include "tetrablocks/game/core/IDialog.hpp"
+#include "tetrablocks/game/screen/ScreenMain.hpp"
 
 namespace tetrablocks {
 
-    Game::Game(){
-        m_font.load(getAsset("/fonts/Constance.otf"));
-    }
+    Game::Game() : m_screen(std::make_unique<ScreenMain>(this)){}
 
-    Game::~Game() {
-        m_font.clear();
-    }
+    Game::~Game() = default;
 
     void Game::init() {
-
+        m_screen->onCreate();
     }
 
     void Game::clear() {
-
+        m_screen->onClear();
+        if (m_dialog) {
+            m_dialog->onClear();
+        }
     }
 
     void Game::onDraw() {
         m_renderer.beginFrame();
-        onRender(m_renderer);
+        m_screen->onDraw(m_renderer);
+        if (m_dialog) {
+            m_dialog->onDraw(m_renderer);
+        }
         m_renderer.endFrame();
+
     }
 
     void Game::onTick(const float dt) {
-
+        if (m_dialog) {
+            m_dialog->onUpdate(dt);
+        }else{
+            m_screen->onUpdate(dt);
+        }
     }
 
     void Game::onResize(const int w, const int h) {
-        view = {w,h};
+        m_view = {w,h};
         m_renderer.resize(w,h);
     }
 
-    void Game::onKey(int k, int a, int m){
-
+    void Game::onKey(const int k, const int a, const int m) {
+        if (m_dialog) {
+            m_dialog->onKey(k,a,m);
+        }else{
+            m_screen->onKey(k,a,m);
+        }
     }
 
-    void Game::onCursor(float x, float y){
-        m = {x,y};
+    void Game::onCursor(const float x, const float y) {
+        if (m_dialog) {
+            m_dialog->onCursor(x,y);
+        }else{
+            m_screen->onCursor(x,y);
+        }
     }
 
-    void Game::onRender(Renderer &r) {
-        r.clear(0xFF202020);
+    void Game::go(IScreen *screen) {
+        m_screen->onClear();
+        if (screen != nullptr){
+            m_screen.reset(screen);
+            screen->onCreate();
+            screen->onResize(m_view.x,m_view.y);
+        }
+    }
 
-        r.image(m_font.getTexture());
-        r.rect(0,0,512,512);
+    void Game::show(IDialog *dialog){
+        if (m_dialog) {
+            m_dialog->onClear();
+        }
 
-        r.fill(0xFF00FF00);
-        r.text(m_font,"Hello, World",m);
+        m_dialog.reset(dialog);
+
+        if (m_dialog){
+            m_dialog->onCreate();
+            m_dialog->onResize(50,50,100,100);
+        }
+    }
+
+    void Game::hide() {
+        show(nullptr);
     }
 }
+
