@@ -13,6 +13,10 @@ add_subdirectory(libs/glad)
 add_subdirectory(libs/LodePNG)
 
 add_executable(tetrablocks
+        include/tetrablocks/game/screen/ScreenMain.hpp
+        include/tetrablocks/game/core/IDialog.hpp
+        include/tetrablocks/game/core/IController.hpp
+        include/tetrablocks/game/core/IScreen.hpp
         include/tetrablocks/game/Game.hpp
         include/tetrablocks/graphics/Font.hpp
         include/tetrablocks/graphics/Renderer.hpp
@@ -24,6 +28,7 @@ add_executable(tetrablocks
         include/tetrablocks/Constants.hpp
         include/tetrablocks/Utils.hpp
 
+        src/game/screen/ScreenMain.cpp
         src/game/Game.cpp
         src/graphics/Font.cpp
         src/graphics/Renderer.cpp
@@ -34,16 +39,8 @@ add_executable(tetrablocks
         src/model/Shape.cpp
         src/Utils.cpp
         src/main.cpp
-        include/tetrablocks/game/screen/ScreenMain.hpp
-        include/tetrablocks/game/core/IScreen.hpp
-        src/game/screen/ScreenMain.cpp
-        include/tetrablocks/game/core/IController.hpp
-        include/tetrablocks/game/core/IDialog.hpp
 )
 
 target_link_libraries(tetrablocks PUBLIC glfw OpenGL::GL GLAD LodePNG glm::glm Freetype::Freetype)
 target_include_directories(tetrablocks PUBLIC include)
 target_compile_definitions(tetrablocks PUBLIC ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets")
-
-find_package(TBB REQUIRED)
-target_link_libraries(tetrablocks PRIVATE TBB::tbb)
