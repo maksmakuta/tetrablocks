@@ -1,0 +1,22 @@
+# TetraBlocks
+
+ Block-based puzzle game where player should place shapes onto board.  
+ If any line (horizontal or vertical) is filled - it removes and player gain points.  
+ Game ends when any shape cannot fit in board
+
+ Currently in development
+
+### Used technologies and libraries
+
+ - C++20
+ - OpenGL 3.3 Core
+ - GLFW 3.x
+ - Glad
+ - lodepng
+ - GLM
+ - Freetype
+
+### Author and License
+ Maks Makuta (c) 2025  
+ MIT License
+
