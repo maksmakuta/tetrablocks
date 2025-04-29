@@ -1,6 +1,8 @@
 #ifndef ICONTROLLER_HPP
 #define ICONTROLLER_HPP
 
+#include "tetrablocks/game/core/Assets.hpp"
+
 namespace tetrablocks {
 
     class IDialog;

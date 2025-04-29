@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "tetrablocks/Constants.hpp"
 #include "tetrablocks/Utils.hpp"
 
 namespace tetrablocks {
@@ -22,11 +23,11 @@ namespace tetrablocks {
     }
 
     void Button::onDraw(Renderer& r) {
-        r.fill(isHover ? 0xFF00FF00 : 0xFFFFFFFF);
+        r.fill(isHover ? COLOR_BTN_BG_HOVER : COLOR_BTN_TEXT);
         r.rect(pos.x,pos.y,m_size.x,m_size.y);
-        r.fill(0xFF1A419D);
+        r.fill(COLOR_BTN_BG);
         r.rect(pos.x + padding,pos.y + padding,m_size.x - 2*padding,m_size.y - 2*padding);
-        r.fill(isHover ? 0xFF00FF00 : 0xFFFFFFFF);
+        r.fill(isHover ? COLOR_BTN_BG_HOVER : COLOR_BTN_TEXT);
         r.text(getAssets().m_font,m_text,pos + m_size / 2.f - glm::vec2{0,delta},Align::Center);
     }
 

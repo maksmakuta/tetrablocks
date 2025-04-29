@@ -1,9 +1,13 @@
 #include "tetrablocks/game/Game.hpp"
 
+#include <string>
+
 #include "tetrablocks/Utils.hpp"
 #include "tetrablocks/game/screen/ScreenMain.hpp"
 
 namespace tetrablocks {
+
+    constexpr auto DIALOG_SIZE = glm::vec2{0.75,0.5};
 
     Game::Game() : m_screen(std::make_unique<ScreenMain>(this)){}
 
@@ -33,7 +37,6 @@ namespace tetrablocks {
             m_dialog->onDraw(m_renderer);
         }
         m_renderer.endFrame();
-
     }
 
     void Game::onTick(const float dt) {
@@ -49,7 +52,9 @@ namespace tetrablocks {
         m_renderer.resize(w,h);
         m_screen->onResize(w,h);
         if (m_dialog) {
-            m_dialog->onResize(50,50,100,100);
+            const auto size = glm::ivec2(glm::vec2(m_view) * DIALOG_SIZE);
+            const auto pos = m_view / 2 - size / 2;
+            m_dialog->onResize(pos.x,pos.y,size.x,size.y);
         }
     }
 
@@ -71,10 +76,10 @@ namespace tetrablocks {
 
     void Game::go(IScreen *screen) {
         m_screen->onClear();
-        if (screen != nullptr){
-            m_screen.reset(screen);
-            screen->onCreate();
-            screen->onResize(m_view.x,m_view.y);
+        m_screen.reset(screen);
+        if (m_screen){
+            m_screen->onCreate();
+            m_screen->onResize(m_view.x,m_view.y);
         }
     }
 
@@ -87,7 +92,9 @@ namespace tetrablocks {
 
         if (m_dialog){
             m_dialog->onCreate();
-            m_dialog->onResize(50,50,100,100);
+            const auto size = glm::ivec2(glm::vec2(m_view) * DIALOG_SIZE);
+            const auto pos = m_view / 2 - size / 2;
+            m_dialog->onResize(pos.x,pos.y,size.x,size.y);
         }
     }
 

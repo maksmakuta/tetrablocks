@@ -16,6 +16,14 @@
  - GLM
  - Freetype
 
+### Screenshots
+Main Menu:
+![main menu](/screenshots/img_main.png)
+Exit dialog:
+![exit dialog](/screenshots/img_dialog_exit.png)
+
+note: green buttons (or text in rectangles) are hovered by cursor which isn't captured
+
 ### Author and License
  Maks Makuta (c) 2025  
  MIT License

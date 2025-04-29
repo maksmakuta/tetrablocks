@@ -15,7 +15,7 @@ namespace tetrablocks {
     }
 
     void ScreenGame::onDraw(Renderer &r){
-        r.clear(0xFF1D1D7C);
+        r.clear(COLOR_BG);
     }
 
     void ScreenGame::onUpdate(float dt){

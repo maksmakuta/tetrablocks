@@ -18,6 +18,7 @@ add_executable(tetrablocks
         include/tetrablocks/game/core/IDialog.hpp
         include/tetrablocks/game/core/IController.hpp
         include/tetrablocks/game/core/IScreen.hpp
+        include/tetrablocks/game/dialog/DialogQuit.hpp
         include/tetrablocks/game/screen/ScreenGame.hpp
         include/tetrablocks/game/screen/ScreenMain.hpp
         include/tetrablocks/game/ui/Button.hpp
@@ -32,6 +33,7 @@ add_executable(tetrablocks
         include/tetrablocks/Constants.hpp
         include/tetrablocks/Utils.hpp
 
+        src/game/dialog/DialogQuit.cpp
         src/game/screen/ScreenGame.cpp
         src/game/screen/ScreenMain.cpp
         src/game/ui/Button.cpp

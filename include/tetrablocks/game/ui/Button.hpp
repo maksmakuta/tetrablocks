@@ -16,7 +16,7 @@ namespace tetrablocks {
     public:
         explicit Button(IController*);
 
-        void onCreate(const std::string& text, const Callback&, const glm::vec2& padding);
+        void onCreate(const std::string& text, const Callback&, const glm::vec2& padding = {32,16});
         void onClear();
         void onDraw(Renderer&);
         void onKey(int k, int a, int m);

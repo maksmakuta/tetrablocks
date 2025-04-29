@@ -2,6 +2,7 @@
 
 #include "tetrablocks/Utils.hpp"
 #include "tetrablocks/game/core/IDialog.hpp"
+#include "tetrablocks/game/dialog/DialogQuit.hpp"
 #include "tetrablocks/game/screen/ScreenGame.hpp"
 
 namespace tetrablocks {
@@ -13,7 +14,7 @@ namespace tetrablocks {
             controller()->to<ScreenGame>();
         },{32,16});
         m_exit.onCreate("Exit",[this] {
-            controller()->exit();
+            controller()->show(new DialogQuit(controller()));
         },{32,16});
     }
 
@@ -23,9 +24,9 @@ namespace tetrablocks {
     }
 
     void ScreenMain::onDraw(Renderer &r) {
-        r.clear(0xFF1D1D7C);
+        r.clear(COLOR_BG);
 
-        r.fill(0xFFFFFFFF);
+        r.fill(COLOR_TEXT);
         r.text(controller()->getAssets().m_font_title,"TetraBlocks",m_title, Align::Center);
 
         m_play.onDraw(r);
