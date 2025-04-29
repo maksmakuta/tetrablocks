@@ -28,6 +28,7 @@ namespace tetrablocks {
         void show(IDialog *dialog) override;
         Assets getAssets() override;
         void hide() override;
+        void exit() override;
 
     private:
         Renderer m_renderer;

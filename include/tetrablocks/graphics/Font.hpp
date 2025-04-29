@@ -41,6 +41,9 @@ namespace tetrablocks {
 
         [[nodiscard]] std::optional<Glyph> at(int i) const;
         [[nodiscard]] Texture getTexture() const;
+        [[nodiscard]] int width(const std::string&) const;
+        [[nodiscard]] int height(const std::string&) const;
+        [[nodiscard]] int getSize() const;
 
     private:
         std::map<int, Glyph> m_glyphs;

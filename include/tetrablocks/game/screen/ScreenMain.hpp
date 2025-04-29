@@ -20,11 +20,11 @@ namespace tetrablocks {
         void onKey(int k, int a, int m) override;
         void onCursor(float x, float y) override;
     private:
-        glm::vec2 m_view;
+        glm::vec2 m_view{0};
+        glm::vec2 m_title{0};
 
         Button m_play;
         Button m_exit;
-        Button m_user;
     };
 
 }

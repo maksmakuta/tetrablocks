@@ -28,4 +28,10 @@ namespace tetrablocks {
         std::uniform_int_distribution u{0,255};
         return (0xFF << 24) | (u(rd) << 16) | (u(rd) << 8) | u(rd);
     }
+
+    bool inRect(const glm::vec4 &rect, const glm::vec2 &point) {
+        const auto a = glm::vec2{rect.x,rect.y};
+        const auto b = a + glm::vec2{rect.z,rect.w};
+        return point.x >= a.x && point.x <= b.x && point.y >= a.y && point.y <= b.y;
+    }
 }

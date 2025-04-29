@@ -10,12 +10,9 @@ namespace tetrablocks {
     Game::~Game() = default;
 
     void Game::init() {
-        m_assets.m_font = Font(24);
-        m_assets.m_font.load(getAsset("/fonts/Constance.otf"));
 
-        m_assets.m_font_title = Font(48);
-        m_assets.m_font_title.load(getAsset("/fonts/Constance.otf"));
-
+        m_assets = {};
+        m_assets.init(getAsset("/fonts/Constance.otf"));
         m_screen->onCreate();
     }
 
@@ -50,6 +47,10 @@ namespace tetrablocks {
     void Game::onResize(const int w, const int h) {
         m_view = {w,h};
         m_renderer.resize(w,h);
+        m_screen->onResize(w,h);
+        if (m_dialog) {
+            m_dialog->onResize(50,50,100,100);
+        }
     }
 
     void Game::onKey(const int k, const int a, const int m) {
@@ -96,6 +97,10 @@ namespace tetrablocks {
 
     void Game::hide() {
         show(nullptr);
+    }
+
+    void Game::exit() {
+        std::exit(0);
     }
 }
 

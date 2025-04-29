@@ -4,6 +4,8 @@
 #include <functional>
 #include <string>
 
+#include "tetrablocks/game/core/Assets.hpp"
+#include "tetrablocks/game/core/IController.hpp"
 #include "tetrablocks/graphics/Renderer.hpp"
 
 namespace tetrablocks {
@@ -12,7 +14,7 @@ namespace tetrablocks {
 
     class Button {
     public:
-        Button() = default;
+        explicit Button(IController*);
 
         void onCreate(const std::string& text, const Callback&, const glm::vec2& padding);
         void onClear();
@@ -20,10 +22,20 @@ namespace tetrablocks {
         void onKey(int k, int a, int m);
         void onCursor(float x, float y);
 
+        [[nodiscard]] glm::vec2 getSize() const;
+
+        glm::vec2 pos{0};
+
     private:
+
+        [[nodiscard]] Assets getAssets() const;
+
         Callback m_callback;
         std::string m_text;
         glm::vec2 m_size{0};
+        IController* m_controller{nullptr};
+        float delta{0.f};
+        bool isHover{false};
     };
 
 }

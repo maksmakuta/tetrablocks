@@ -4,6 +4,7 @@
 #include <string>
 #include <functional>
 #include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 namespace tetrablocks {
 
@@ -12,6 +13,8 @@ namespace tetrablocks {
 
     glm::vec2 random(const glm::vec2& min = {-1,-1}, const glm::vec2& max = {1,1});
     glm::uint randColor();
+
+    bool inRect(const glm::vec4& rect, const glm::vec2& point);
 
 }
 

@@ -98,6 +98,27 @@ namespace tetrablocks {
         m_size = 0;
     }
 
+    int Font::width(const std::string& str) const {
+        int result = 0;
+        for (const auto& c : str) {
+            if (const auto& g = at(c)) {
+                result += g->advance;
+            }
+        }
+        return result;
+    }
+
+    int Font::height(const std::string& str) const {
+        int result = 0;
+        for (const auto& c : str) {
+            if (const auto& g = at(c)) {
+                result = std::max<unsigned char>(g->size.y, result);
+            }
+        }
+        return result;
+
+    }
+
     std::optional<Glyph> Font::at(const int i) const{
         if (m_glyphs.contains(i)) {
             return m_glyphs.at(i);
@@ -107,5 +128,9 @@ namespace tetrablocks {
 
     Texture Font::getTexture() const{
         return m_texture;
+    }
+
+    int Font::getSize() const {
+        return m_size;
     }
 }

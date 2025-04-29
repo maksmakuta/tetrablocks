@@ -137,7 +137,7 @@ namespace tetrablocks {
         });
     }
 
-    void Renderer::text(const Font& fnt, const std::string& text, const glm::vec2& pos, const Align&) {
+    void Renderer::text(const Font& fnt, const std::string& text, const glm::vec2& pos, const Align& a) {
         if (m_paint != 3) {
             flush();
             m_paint = 3;
@@ -146,6 +146,13 @@ namespace tetrablocks {
         m_shader.setInt("u_image",0);
 
         glm::vec2 p = pos;
+
+        if (a == Align::Center) {
+            p.x -= static_cast<float>(fnt.width(text)) / 2.f;
+        }
+        if (a == Align::End) {
+            p.x -= static_cast<float>(fnt.width(text));
+        }
 
         for(const auto& c : text) {
             if (const auto g = fnt.at(c); g.has_value()) {

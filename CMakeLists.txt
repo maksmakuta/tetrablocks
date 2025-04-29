@@ -34,8 +34,8 @@ add_executable(tetrablocks
 
         src/game/screen/ScreenGame.cpp
         src/game/screen/ScreenMain.cpp
-        src/game/Game.cpp
         src/game/ui/Button.cpp
+        src/game/Game.cpp
         src/graphics/Font.cpp
         src/graphics/Renderer.cpp
         src/graphics/Shader.cpp
