@@ -1,14 +1,16 @@
-#ifndef SCREENMAIN_HPP
-#define SCREENMAIN_HPP
+#ifndef SCRENNGAME_HPP
+#define SCRENNGAME_HPP
+
+#include <array>
 
 #include "tetrablocks/game/core/IScreen.hpp"
-#include "tetrablocks/game/ui/Button.hpp"
+#include "tetrablocks/model/Board.hpp"
 
 namespace tetrablocks {
 
-    class ScreenMain final : public IScreen {
+    class ScreenGame final : public IScreen {
     public:
-        explicit ScreenMain(IController*);
+        explicit ScreenGame(IController*);
 
         void onCreate() override;
         void onClear() override;
@@ -19,14 +21,12 @@ namespace tetrablocks {
         void onResize(int w, int h) override;
         void onKey(int k, int a, int m) override;
         void onCursor(float x, float y) override;
-    private:
-        glm::vec2 m_view;
 
-        Button m_play;
-        Button m_exit;
-        Button m_user;
+    private:
+        Board m_board;
+        std::array<Shape, 3> m_shapes;
     };
 
 }
 
-#endif //SCREENMAIN_HPP
+#endif //SCRENNGAME_HPP

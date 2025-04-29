@@ -1,7 +1,4 @@
 #include "tetrablocks/game/screen/ScreenMain.hpp"
-
-#include <GLFW/glfw3.h>
-
 #include "tetrablocks/game/core/IDialog.hpp"
 
 namespace tetrablocks {
@@ -19,7 +16,7 @@ namespace tetrablocks {
     }
 
     void ScreenMain::onDraw(Renderer &r){
-        r.clear(0xFF000000);
+        r.clear(0xFF1D1D7C);
     }
 
     void ScreenMain::onUpdate(float dt){
@@ -27,7 +24,7 @@ namespace tetrablocks {
     }
 
     void ScreenMain::onResize(int w, int h) {
-
+        m_view = {w,h};
     }
 
     void ScreenMain::onKey(int k, int a, int m){

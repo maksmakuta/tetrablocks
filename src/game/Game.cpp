@@ -1,8 +1,6 @@
 #include "tetrablocks/game/Game.hpp"
 
-#include <iostream>
-
-#include "tetrablocks/game/core/IDialog.hpp"
+#include "tetrablocks/Utils.hpp"
 #include "tetrablocks/game/screen/ScreenMain.hpp"
 
 namespace tetrablocks {
@@ -12,6 +10,12 @@ namespace tetrablocks {
     Game::~Game() = default;
 
     void Game::init() {
+        m_assets.m_font = Font(24);
+        m_assets.m_font.load(getAsset("/fonts/Constance.otf"));
+
+        m_assets.m_font_title = Font(48);
+        m_assets.m_font_title.load(getAsset("/fonts/Constance.otf"));
+
         m_screen->onCreate();
     }
 
@@ -20,6 +24,9 @@ namespace tetrablocks {
         if (m_dialog) {
             m_dialog->onClear();
         }
+
+        m_assets.m_font.clear();
+        m_assets.m_font_title.clear();
     }
 
     void Game::onDraw() {
@@ -81,6 +88,10 @@ namespace tetrablocks {
             m_dialog->onCreate();
             m_dialog->onResize(50,50,100,100);
         }
+    }
+
+    Assets Game::getAssets() {
+        return m_assets;
     }
 
     void Game::hide() {

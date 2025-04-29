@@ -13,10 +13,14 @@ add_subdirectory(libs/glad)
 add_subdirectory(libs/LodePNG)
 
 add_executable(tetrablocks
-        include/tetrablocks/game/screen/ScreenMain.hpp
+
+        include/tetrablocks/game/core/Assets.hpp
         include/tetrablocks/game/core/IDialog.hpp
         include/tetrablocks/game/core/IController.hpp
         include/tetrablocks/game/core/IScreen.hpp
+        include/tetrablocks/game/screen/ScreenGame.hpp
+        include/tetrablocks/game/screen/ScreenMain.hpp
+        include/tetrablocks/game/ui/Button.hpp
         include/tetrablocks/game/Game.hpp
         include/tetrablocks/graphics/Font.hpp
         include/tetrablocks/graphics/Renderer.hpp
@@ -28,8 +32,10 @@ add_executable(tetrablocks
         include/tetrablocks/Constants.hpp
         include/tetrablocks/Utils.hpp
 
+        src/game/screen/ScreenGame.cpp
         src/game/screen/ScreenMain.cpp
         src/game/Game.cpp
+        src/game/ui/Button.cpp
         src/graphics/Font.cpp
         src/graphics/Renderer.cpp
         src/graphics/Shader.cpp
@@ -39,6 +45,7 @@ add_executable(tetrablocks
         src/model/Shape.cpp
         src/Utils.cpp
         src/main.cpp
+
 )
 
 target_link_libraries(tetrablocks PUBLIC glfw OpenGL::GL GLAD LodePNG glm::glm Freetype::Freetype)

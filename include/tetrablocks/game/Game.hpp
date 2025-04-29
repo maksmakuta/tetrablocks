@@ -3,7 +3,9 @@
 
 #include <memory>
 
-#include "core/IScreen.hpp"
+#include "core/Assets.hpp"
+#include "tetrablocks/game/core/IScreen.hpp"
+#include "tetrablocks/game/core/IDialog.hpp"
 #include "tetrablocks/graphics/Renderer.hpp"
 
 namespace tetrablocks {
@@ -24,10 +26,12 @@ namespace tetrablocks {
 
         void go(IScreen *screen) override;
         void show(IDialog *dialog) override;
+        Assets getAssets() override;
         void hide() override;
 
     private:
         Renderer m_renderer;
+        Assets m_assets;
         std::unique_ptr<IScreen> m_screen;
         std::unique_ptr<IDialog> m_dialog;
         glm::ivec2 m_view{0};

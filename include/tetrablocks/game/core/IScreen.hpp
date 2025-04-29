@@ -1,7 +1,8 @@
 #ifndef ISCREEN_HPP
 #define ISCREEN_HPP
 
-#include "IController.hpp"
+#include "tetrablocks/game/core/Assets.hpp"
+#include "tetrablocks/game/core/IController.hpp"
 #include "tetrablocks/graphics/Renderer.hpp"
 
 namespace tetrablocks {

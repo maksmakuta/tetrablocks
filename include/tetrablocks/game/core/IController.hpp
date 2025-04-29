@@ -13,6 +13,7 @@ namespace tetrablocks {
         virtual void go(IScreen* screen) = 0;
         virtual void show(IDialog* dialog) = 0;
         virtual void hide() = 0;
+        virtual Assets getAssets() = 0;
 
         template <class T> void to() {
             go(new T(this));
