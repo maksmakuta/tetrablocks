@@ -21,6 +21,8 @@ Main Menu:
 ![main menu](/screenshots/img_main.png)
 Exit dialog:
 ![exit dialog](/screenshots/img_dialog_exit.png)
+Game (in development):
+![game](/screenshots/img_game.png)
 
 note: green buttons (or text in rectangles) are hovered by cursor which isn't captured
 

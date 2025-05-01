@@ -1,9 +1,8 @@
 #ifndef SCRENNGAME_HPP
 #define SCRENNGAME_HPP
 
-#include <array>
-
 #include "tetrablocks/game/core/IScreen.hpp"
+#include "tetrablocks/game/ui/Button.hpp"
 #include "tetrablocks/model/Board.hpp"
 
 namespace tetrablocks {
@@ -23,8 +22,19 @@ namespace tetrablocks {
         void onCursor(float x, float y) override;
 
     private:
+        void drawBoard(Renderer& r, const glm::vec4& rect);
+        void drawShapes(Renderer& r, const glm::vec4& rect);
+        void drawHeader(Renderer& r, const glm::vec4& rect);
+
+        Button m_pause;
         Board m_board;
-        std::array<Shape, 3> m_shapes;
+        std::vector<Shape> m_shapes;
+        glm::vec2 m_view{0};
+        glm::vec2 m_mouse{0};
+        glm::vec4 m_rect_board{0};
+        glm::vec4 m_rect_header{0};
+        glm::vec4 m_rect_shapes{0};
+        glm::uint m_score{0};
     };
 
 }

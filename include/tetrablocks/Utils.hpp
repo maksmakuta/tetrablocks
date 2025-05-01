@@ -16,6 +16,21 @@ namespace tetrablocks {
 
     bool inRect(const glm::vec4& rect, const glm::vec2& point);
 
+    template <typename T>
+    auto operator<=>(const glm::vec<2,T>& a, const glm::vec<2,T>& b) {
+        const auto x = a.x <=> b.x;
+        const auto y = a.y <=> b.y;
+        if (x != y) {
+            if (x == std::strong_ordering::equal) {
+                return y;
+            }
+            if (y == std::strong_ordering::equal) {
+                return x;
+            }
+        }
+        return x;
+    }
+
 }
 
 #endif //UTILS_HPP

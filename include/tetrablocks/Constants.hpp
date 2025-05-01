@@ -4,6 +4,7 @@
 namespace tetrablocks {
 
     constexpr auto GRID_SIZE = 9;
+    constexpr auto GRID_PADDING = 8.f;
 
     // colors
     constexpr auto COLOR_BG = 0xFF1D1D7C;
@@ -14,6 +15,9 @@ namespace tetrablocks {
     constexpr auto COLOR_BTN_TEXT = 0xFFFFFFFF;
 
     constexpr auto COLOR_DIALOG_BG = 0xFF808080;
+
+    constexpr auto COLOR_GRID_BORDER = 0xFFA0A0A0;
+    constexpr auto COLOR_GRID_CELL = 0xFF101010;
 
 }
 

@@ -14,15 +14,19 @@ namespace tetrablocks {
     public:
         explicit Board(const glm::uvec2& size = glm::uvec2{GRID_SIZE});
 
-        bool isFit(const Shape&, const glm::uvec2& offset);
-        void put(const Shape&, const glm::uvec2& offset);
+        bool isFit(Shape&, const glm::u8vec2& offset);
+        void put(Shape&, const glm::u8vec2& offset);
 
-        void checkLines();
+        int checkLines();
 
-        [[nodiscard]] glm::vec2 getSize() const;
+        [[nodiscard]] glm::u8vec2 getSize() const;
         [[nodiscard]] std::vector<Block> getData() const;
+        Block& at(const glm::ivec2& pos);
 
     private:
+        bool isFull(int pos, bool h);
+        void clear(int pos, bool h);
+
         std::vector<Block> m_data;
         glm::u8vec2 m_size;
     };

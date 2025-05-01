@@ -1,5 +1,7 @@
 #include "tetrablocks/model/Block.hpp"
 
+#include "tetrablocks/Constants.hpp"
+
 namespace tetrablocks {
 
     glm::uint getColor(const Block& b) {
@@ -19,7 +21,7 @@ namespace tetrablocks {
             case Block::Orange:
                 return 0xFFFFA500;
             default:
-                return 0x00000000;
+                return COLOR_GRID_CELL;
         }
     }
 

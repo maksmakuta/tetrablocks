@@ -8,7 +8,7 @@ namespace tetrablocks {
     using byte = unsigned char;
 
     enum class Block : byte{
-        Empty = 0,
+        Empty,
         Cyan,
         Yellow,
         Purple,
