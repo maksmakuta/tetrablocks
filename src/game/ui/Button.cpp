@@ -7,8 +7,6 @@
 
 namespace tetrablocks {
 
-    constexpr auto padding = 4;
-
     Button::Button(IController *c) : m_controller(c){}
 
     void Button::onCreate(const std::string& text, const Callback& callback, const glm::vec2& padding) {
@@ -26,7 +24,7 @@ namespace tetrablocks {
         r.fill(isHover ? COLOR_BTN_BG_HOVER : COLOR_BTN_TEXT);
         r.rect(pos.x,pos.y,m_size.x,m_size.y);
         r.fill(COLOR_BTN_BG);
-        r.rect(pos.x + padding,pos.y + padding,m_size.x - 2*padding,m_size.y - 2*padding);
+        r.rect(pos.x + BUTTON_BORDER,pos.y + BUTTON_BORDER,m_size.x - 2 * BUTTON_BORDER,m_size.y - 2 * BUTTON_BORDER);
         r.fill(isHover ? COLOR_BTN_BG_HOVER : COLOR_BTN_TEXT);
         r.text(getAssets().m_font,m_text,pos + m_size / 2.f - glm::vec2{0,delta},Align::Center);
     }

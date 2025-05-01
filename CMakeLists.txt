@@ -47,6 +47,10 @@ add_executable(tetrablocks
         src/model/Shape.cpp
         src/Utils.cpp
         src/main.cpp
+        include/tetrablocks/game/dialog/DialogPause.hpp
+        include/tetrablocks/game/dialog/DialogEnd.hpp
+        src/game/dialog/DialogPause.cpp
+        src/game/dialog/DialogEnd.cpp
 
 )
 

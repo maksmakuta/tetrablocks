@@ -75,6 +75,7 @@ namespace tetrablocks {
     }
 
     void Game::go(IScreen *screen) {
+        hide();
         m_screen->onClear();
         m_screen.reset(screen);
         if (m_screen){

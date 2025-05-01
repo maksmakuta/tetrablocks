@@ -5,6 +5,7 @@ namespace tetrablocks {
 
     constexpr auto GRID_SIZE = 9;
     constexpr auto GRID_PADDING = 8.f;
+    constexpr auto BUTTON_BORDER = 4;
 
     // colors
     constexpr auto COLOR_BG = 0xFF1D1D7C;

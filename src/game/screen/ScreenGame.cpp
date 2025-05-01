@@ -4,13 +4,16 @@
 #include <GLFW/glfw3.h>
 
 #include "tetrablocks/Utils.hpp"
+#include "tetrablocks/game/dialog/DialogPause.hpp"
 
 namespace tetrablocks {
 
     ScreenGame::ScreenGame(IController *c) : IScreen(c), m_pause(c) {}
 
     void ScreenGame::onCreate(){
-        m_pause.onCreate("Pause",{});
+        m_pause.onCreate("Pause",[this]{
+            controller()->show(new DialogPause(controller()));
+        });
     }
 
     void ScreenGame::onClear(){
@@ -77,9 +80,9 @@ namespace tetrablocks {
     }
 
     void ScreenGame::onKey(const int k, const int a, const int m){
-        // if (k == GLFW_KEY_ESCAPE && a == GLFW_PRESS) {
-        //     controller()->show(new DialogPause(controller()));
-        // }
+        if (k == GLFW_KEY_ESCAPE && a == GLFW_PRESS) {
+            controller()->show(new DialogPause(controller()));
+        }
         m_pause.onKey(k,a,m);
     }
 
