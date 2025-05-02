@@ -1,11 +1,20 @@
 #ifndef SCRENNGAME_HPP
 #define SCRENNGAME_HPP
 
+#include <memory>
+#include <random>
+
 #include "tetrablocks/game/core/IScreen.hpp"
 #include "tetrablocks/game/ui/Button.hpp"
 #include "tetrablocks/model/Board.hpp"
+#include "tetrablocks/model/Shape.hpp"
 
 namespace tetrablocks {
+
+    struct ShapeItem {
+        Shape item;
+        glm::vec2 pos;
+    };
 
     class ScreenGame final : public IScreen {
     public:
@@ -22,19 +31,20 @@ namespace tetrablocks {
         void onCursor(float x, float y) override;
 
     private:
-        void drawBoard(Renderer& r, const glm::vec4& rect);
-        void drawShapes(Renderer& r, const glm::vec4& rect);
-        void drawHeader(Renderer& r, const glm::vec4& rect);
+        [[nodiscard]] uint getRandom() const;
+        void draw(Renderer &r, ShapeItem& s, bool selected) const;
+        void drawBoard(Renderer& r);
 
-        Button m_pause;
+        std::unique_ptr<std::mt19937_64> m_random;
+        std::array<ShapeItem,3> m_shapes;
         Board m_board;
-        std::vector<Shape> m_shapes;
-        glm::vec2 m_view{0};
+        Button m_pause;
+        glm::vec2 m_pos_score{0};
+        glm::vec2 m_pos_board{0};
+        glm::vec2 m_cell{0};
         glm::vec2 m_mouse{0};
-        glm::vec4 m_rect_board{0};
-        glm::vec4 m_rect_header{0};
-        glm::vec4 m_rect_shapes{0};
         glm::uint m_score{0};
+        int m_selected{-1};
     };
 
 }

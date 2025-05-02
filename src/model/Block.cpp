@@ -20,7 +20,7 @@ namespace tetrablocks {
                 return 0xFF0000FF;
             case Block::Orange:
                 return 0xFFFFA500;
-            default:
+            case Block::Empty:
                 return COLOR_GRID_CELL;
         }
     }

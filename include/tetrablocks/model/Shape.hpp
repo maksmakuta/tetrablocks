@@ -18,6 +18,8 @@ namespace tetrablocks {
         [[nodiscard]] std::vector<Block> getData() const;
         [[nodiscard]] glm::u8vec2 getSize() const;
 
+        static Shape getRandom(uint id);
+
     private:
         std::vector<Block> m_blocks;
         glm::u8vec2 m_size;

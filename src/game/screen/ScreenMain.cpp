@@ -1,5 +1,6 @@
 #include "tetrablocks/game/screen/ScreenMain.hpp"
 
+#include "tetrablocks/Constants.hpp"
 #include "tetrablocks/Utils.hpp"
 #include "tetrablocks/game/core/IDialog.hpp"
 #include "tetrablocks/game/dialog/DialogQuit.hpp"
