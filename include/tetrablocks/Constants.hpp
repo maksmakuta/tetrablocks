@@ -7,6 +7,9 @@ namespace tetrablocks {
     constexpr auto GRID_PADDING = 8.f;
     constexpr auto BUTTON_BORDER = 4;
 
+    constexpr auto POINT_LINE = 10;
+    constexpr auto POINT_SHAPE = 2;
+
     // colors
     constexpr auto COLOR_BG = 0xFF1D1D7C;
     constexpr auto COLOR_TEXT = 0xFFFFFFFF;
@@ -17,8 +20,8 @@ namespace tetrablocks {
 
     constexpr auto COLOR_DIALOG_BG = 0xFF808080;
 
-    constexpr auto COLOR_GRID_BORDER = 0xFFA0A0A0;
-    constexpr auto COLOR_GRID_CELL = 0xFF101010;
+    constexpr auto COLOR_GRID_BORDER = 0xFF808080;
+    constexpr auto COLOR_GRID_CELL = 0x80101010;
 
 }
 

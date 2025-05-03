@@ -1,20 +1,19 @@
 #include "tetrablocks/model/Board.hpp"
+
+#include <algorithm>
+#include <glm/fwd.hpp>
+
 #include "tetrablocks/Utils.hpp"
 
 namespace tetrablocks {
 
-    Board::Board(const glm::uvec2& size) : m_data(size.x * size.y), m_size(size){}
+    Board::Board(const glm::u8vec2& size) : m_data(size.x * size.y), m_size(size){}
 
     bool Board::isFit(Shape& s, const glm::u8vec2& offset) {
-        if (offset + s.getSize() < getSize()) {
-            auto res = true;
-            forXY(s.getSize(),[this, &offset, &s, &res](const glm::u8vec2& p) {
-                const auto pos = offset + p;
-                if (!(at(pos) == Block::Empty && s.at(p) != Block::Empty) && res) {
-                    res = false;
-                }
+        if (offset + s.getSize() <= getSize()) {
+            return std::ranges::all_of(s.getVisible(),[&offset, this](const glm::u8vec2& item) {
+                return at(offset + item) == Block::Empty;
             });
-            return res;
         }
         return false;
     }
@@ -30,17 +29,7 @@ namespace tetrablocks {
 
     int Board::checkLines() {
         int lines = 0;
-
-        for (int x = 0; x < m_size.x; x++) {
-            if (isFull(x,true)) {
-                clear(x,true);
-                ++lines;
-            }
-            if (isFull(x,false)) {
-                clear(x,false);
-                ++lines;
-            }
-        }
+        //TODO(Board::checkLines())
         return lines;
     }
 
@@ -52,23 +41,8 @@ namespace tetrablocks {
         return m_data;
     }
 
-    Block& Board::at(const glm::ivec2 &pos) {
-        assert(pos.x < m_size.x && pos.y < m_size.y);
-        return m_data[pos.x + m_size.x * pos.y];
+    Block& Board::at(const glm::u8vec2 &pos) {
+        return m_data[pos.x + pos.y * m_size.x];
     }
 
-    bool Board::isFull(const int pos, const bool h) {
-        for (int t = 0; t < h ? m_size.x : m_size.y; t++) {
-            if (at(h ? glm::vec2{t,pos} : glm::vec2{pos, t}) == Block::Empty) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    void Board::clear(const int pos, const bool h) {
-        for (int t = 0; t < h ? m_size.x : m_size.y; t++) {
-            at(h ? glm::vec2{t,pos} : glm::vec2{pos, t}) = Block::Empty;
-        }
-    }
 }

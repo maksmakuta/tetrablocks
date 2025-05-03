@@ -34,6 +34,7 @@ namespace tetrablocks {
         [[nodiscard]] uint getRandom() const;
         void draw(Renderer &r, ShapeItem& s, bool selected) const;
         void drawBoard(Renderer& r);
+        void checkShapes();
 
         std::unique_ptr<std::mt19937_64> m_random;
         std::array<ShapeItem,3> m_shapes;
@@ -41,6 +42,7 @@ namespace tetrablocks {
         Button m_pause;
         glm::vec2 m_pos_score{0};
         glm::vec2 m_pos_board{0};
+        glm::vec2 m_insert{0};
         glm::vec2 m_cell{0};
         glm::vec2 m_mouse{0};
         glm::uint m_score{0};

@@ -1,6 +1,8 @@
 #include "tetrablocks/game/screen/ScreenGame.hpp"
 
+#include <algorithm>
 #include <format>
+#include <iostream>
 #include <GLFW/glfw3.h>
 
 #include "tetrablocks/Constants.hpp"
@@ -47,24 +49,35 @@ namespace tetrablocks {
     void ScreenGame::drawBoard(Renderer &r) {
         const auto& origin = m_pos_board;
         const auto size = m_cell * glm::vec2(m_board.getSize()) + 2 * GRID_PADDING;
-        r.fill(0xFFFFFFFF);
+        r.fill(COLOR_GRID_BORDER);
         r.rect(origin.x - GRID_PADDING,origin.y - GRID_PADDING,size.x,size.y);
-
 
         forXY (m_board.getSize(),[this, origin, &r](const glm::vec2& p) {
             const auto block = m_board.at(p);
-            auto offset = origin + p * m_cell;
+            const auto offset = origin + p * m_cell;
             r.fill(getColor(block));
             r.rect(offset.x,offset.y,m_cell.x,m_cell.y);
         });
 
-
-        r.fill(0xFFFFFFFF);
+        r.fill(COLOR_GRID_BORDER);
         for (int i = 1; i < m_board.getSize().x;i++) {
-            r.rect(origin.x + m_cell.x * i,origin.y,1,m_board.getSize().y * m_cell.y);
+            const auto t = static_cast<float>(i);
+            r.rect(origin.x + m_cell.x * t,origin.y,1,static_cast<float>(m_board.getSize().y) * m_cell.y);
         }
+
         for (int i = 1; i < m_board.getSize().y;i++) {
-            r.rect(origin.x ,origin.y+ m_cell.y * i,m_board.getSize().x * m_cell.x,1);
+            const auto t = static_cast<float>(i);
+            r.rect(origin.x ,origin.y+ m_cell.y * t,static_cast<float>(m_board.getSize().x) * m_cell.x,1);
+        }
+    }
+
+    void ScreenGame::checkShapes() {
+        if (std::ranges::all_of(m_shapes,[](const ShapeItem& item) {
+            return item.item.getSize() == glm::u8vec2{};
+        })) {
+            for (auto&[item, _]: m_shapes) {
+                item = Shape::getRandom(getRandom());
+            }
         }
     }
 
@@ -82,18 +95,15 @@ namespace tetrablocks {
         }
     }
 
-    void ScreenGame::onUpdate(float dt){}
+    void ScreenGame::onUpdate(float dt) {}
 
     void ScreenGame::onResize(const int w, const int h) {
-        const auto rect_header = glm::vec4{0,0,w,h*0.10};
-        const auto rect_board  = glm::vec4{0,rect_header.w,w,h*0.7};
-        const auto rect_footer = glm::vec4{0,rect_header.w + rect_board.w,w,h*0.20};
+        const auto rect_header = glm::vec4{0,0,w,h*0.15};
+        const auto rect_board  = glm::vec4{0,rect_header.w,w,h*0.6};
+        const auto rect_footer = glm::vec4{0,rect_header.w + rect_board.w,w,h*0.25};
 
         m_pos_score = {rect_header.z / 2.f,rect_header.w / 2.f + static_cast<float>(controller()->getAssets().m_font.getSize()) / 2.f};
         m_pause.pos = glm::vec2{50.f,rect_header.w / 2.f - m_pause.getSize().y / 2.f};
-
-        const auto side = std::min(rect_board.z,rect_board.w);
-        //m_cell = glm::vec2{side} / glm::vec2(m_board.getSize());
 
         m_pos_board = glm::vec2{rect_board.x + rect_board.z / 2.f,rect_board.y + rect_board.w / 2.f} - (glm::vec2(m_board.getSize()) * m_cell) / 2.f;
 
@@ -116,6 +126,16 @@ namespace tetrablocks {
                 }
             }
             if (a == GLFW_RELEASE){
+                if (m_board.isFit(m_shapes[m_selected].item,m_insert)) {
+                    m_score += POINT_SHAPE;
+                    m_board.put(m_shapes[m_selected].item,m_insert);
+                    m_shapes[m_selected].item = Shape();
+                    m_selected = -1;
+                    checkShapes();
+                    if (const auto lines = m_board.checkLines(); lines > 0) {
+                        m_score += lines * POINT_LINE;
+                    }
+                }
                 m_selected = -1;
             }
         }
@@ -124,7 +144,13 @@ namespace tetrablocks {
 
     void ScreenGame::onCursor(const float x, const float y){
         m_mouse = glm::vec2{x,y};
-        m_pause.onCursor(x,y);
+        if (m_selected == -1) {
+            m_pause.onCursor(x,y);
+        }else {
+            auto&[item, pos] = m_shapes[m_selected];
+            const auto point = m_mouse - (glm::vec2(item.getSize()) * m_cell) / 2.f + m_cell*0.5f;
+            m_insert = glm::floor((point - m_pos_board) / glm::vec2(m_cell));
+        }
     }
 
     uint ScreenGame::getRandom() const {
