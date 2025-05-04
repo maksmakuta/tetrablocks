@@ -26,7 +26,7 @@ Pause dialog:
 Game :
 ![game](/screenshots/img_game.png)
 Game Over dialog:
-![game over](/screenshots/img_game_over.png)
+![game over](/screenshots/img_dialog_end.png)
 
 
 note: green buttons (or text in rectangles) are hovered by cursor which isn't captured

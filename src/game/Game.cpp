@@ -34,6 +34,8 @@ namespace tetrablocks {
         m_renderer.beginFrame();
         m_screen->onDraw(m_renderer);
         if (m_dialog) {
+            m_renderer.fill(0x80000000);
+            m_renderer.rect(0,0,static_cast<float>(m_view.x),static_cast<float>(m_view.y));
             m_dialog->onDraw(m_renderer);
         }
         m_renderer.endFrame();
