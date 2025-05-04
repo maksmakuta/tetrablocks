@@ -7,6 +7,7 @@
 
 #include "tetrablocks/Constants.hpp"
 #include "tetrablocks/Utils.hpp"
+#include "tetrablocks/game/dialog/DialogEnd.hpp"
 #include "tetrablocks/game/dialog/DialogPause.hpp"
 
 namespace tetrablocks {
@@ -78,6 +79,12 @@ namespace tetrablocks {
             for (auto&[item, _]: m_shapes) {
                 item = Shape::getRandom(getRandom());
             }
+        }
+
+        if (!std::ranges::any_of(m_shapes,[this](ShapeItem& i) {
+            return m_board.fit(i.item);
+        })) {
+            controller()->show(new DialogEnd(m_score,controller()));
         }
     }
 

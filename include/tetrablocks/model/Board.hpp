@@ -14,6 +14,7 @@ namespace tetrablocks {
     public:
         explicit Board(const glm::u8vec2& size = glm::u8vec2{GRID_SIZE});
 
+        bool fit(Shape&);
         bool isFit(Shape&, const glm::u8vec2& offset);
         void put(Shape&, const glm::u8vec2& offset);
 
