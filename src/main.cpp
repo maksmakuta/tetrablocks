@@ -2,6 +2,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <variant>
 
 #include "tetrablocks/game/Game.hpp"
 
@@ -48,7 +49,10 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for macOS
 #endif
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "TetraBlocks", nullptr, nullptr);
+    const auto monitor = glfwGetPrimaryMonitor();
+    glm::ivec2 size;
+    glfwGetMonitorWorkarea(monitor,nullptr,nullptr,&size.x,&size.y);
+    GLFWwindow* window = glfwCreateWindow(size.x, size.y, "TetraBlocks", monitor, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window\n";
         glfwTerminate();
@@ -63,7 +67,7 @@ int main() {
     }
     auto game = tetrablocks::Game();
     game.init();
-    game.onResize(800,600);
+    game.onResize(size.x,size.y);
     glfwSetWindowUserPointer(window,&game);
 
     glfwSetFramebufferSizeCallback(window, onResize);

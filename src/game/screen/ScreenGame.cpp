@@ -12,10 +12,9 @@
 
 namespace tetrablocks {
 
-    ScreenGame::ScreenGame(IController *c) : IScreen(c),
-        m_random(std::make_unique<std::mt19937_64>(std::random_device{}())),m_pause(c), m_cell(50) {
+    ScreenGame::ScreenGame(IController *c) : IScreen(c),m_pause(c), m_cell(50) {
         for (auto&[item, pos] : m_shapes) {
-            item = Shape::getRandom(getRandom());
+            item = m_factory.getNext();
             pos = {0,0};
         }
     }
@@ -77,7 +76,7 @@ namespace tetrablocks {
             return item.item.getSize() == glm::u8vec2{};
         })) {
             for (auto&[item, _]: m_shapes) {
-                item = Shape::getRandom(getRandom());
+                item = m_factory.getNext();
             }
         }
 
@@ -132,16 +131,15 @@ namespace tetrablocks {
                     }
                 }
             }
-            if (a == GLFW_RELEASE){
-                if (m_board.isFit(m_shapes[m_selected].item,m_insert)) {
+            if (a == GLFW_RELEASE && m_selected >= 0){
+                const auto insert = glm::u8vec2(m_insert);
+                if (insert < m_board.getSize() && m_board.isFit(m_shapes[m_selected].item,insert)) {
                     m_score += POINT_SHAPE;
-                    m_board.put(m_shapes[m_selected].item,m_insert);
+                    m_board.put(m_shapes[m_selected].item,insert);
                     m_shapes[m_selected].item = Shape();
                     m_selected = -1;
                     checkShapes();
-                    if (const auto lines = m_board.checkLines(); lines > 0) {
-                        m_score += lines * POINT_LINE;
-                    }
+                    m_score += m_board.checkLines() * POINT_LINE;
                 }
                 m_selected = -1;
             }
@@ -160,10 +158,4 @@ namespace tetrablocks {
         }
     }
 
-    uint ScreenGame::getRandom() const {
-        if (m_random) {
-            return static_cast<uint>((*m_random)());
-        }
-        return -1;
-    }
 }

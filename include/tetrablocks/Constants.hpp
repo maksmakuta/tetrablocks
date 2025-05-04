@@ -21,7 +21,7 @@ namespace tetrablocks {
     constexpr auto COLOR_DIALOG_BG = 0xFF808080;
 
     constexpr auto COLOR_GRID_BORDER = 0xFF808080;
-    constexpr auto COLOR_GRID_CELL = 0x80101010;
+    constexpr auto COLOR_GRID_CELL = 0xFF000000;
 
 }
 

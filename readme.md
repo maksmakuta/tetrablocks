@@ -21,8 +21,13 @@ Main Menu:
 ![main menu](/screenshots/img_main.png)
 Exit dialog:
 ![exit dialog](/screenshots/img_dialog_exit.png)
-Game (in development):
+Pause dialog:
+![pause dialog](/screenshots/img_dialog_pause.png)
+Game :
 ![game](/screenshots/img_game.png)
+Game Over dialog:
+![game over](/screenshots/img_game_over.png)
+
 
 note: green buttons (or text in rectangles) are hovered by cursor which isn't captured
 

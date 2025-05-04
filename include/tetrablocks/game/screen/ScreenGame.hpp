@@ -4,6 +4,7 @@
 #include <memory>
 #include <random>
 
+#include "tetrablocks/game/ShapeFactory.hpp"
 #include "tetrablocks/game/core/IScreen.hpp"
 #include "tetrablocks/game/ui/Button.hpp"
 #include "tetrablocks/model/Board.hpp"
@@ -31,12 +32,11 @@ namespace tetrablocks {
         void onCursor(float x, float y) override;
 
     private:
-        [[nodiscard]] uint getRandom() const;
         void draw(Renderer &r, ShapeItem& s, bool selected) const;
         void drawBoard(Renderer& r);
         void checkShapes();
 
-        std::unique_ptr<std::mt19937_64> m_random;
+        ShapeFactory m_factory;
         std::array<ShapeItem,3> m_shapes;
         Board m_board;
         Button m_pause;

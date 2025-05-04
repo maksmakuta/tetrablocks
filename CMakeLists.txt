@@ -18,11 +18,14 @@ add_executable(tetrablocks
         include/tetrablocks/game/core/IDialog.hpp
         include/tetrablocks/game/core/IController.hpp
         include/tetrablocks/game/core/IScreen.hpp
+        include/tetrablocks/game/dialog/DialogEnd.hpp
         include/tetrablocks/game/dialog/DialogQuit.hpp
+        include/tetrablocks/game/dialog/DialogPause.hpp
         include/tetrablocks/game/screen/ScreenGame.hpp
         include/tetrablocks/game/screen/ScreenMain.hpp
         include/tetrablocks/game/ui/Button.hpp
         include/tetrablocks/game/Game.hpp
+        include/tetrablocks/game/ShapeFactory.hpp
         include/tetrablocks/graphics/Font.hpp
         include/tetrablocks/graphics/Renderer.hpp
         include/tetrablocks/graphics/Shader.hpp
@@ -33,10 +36,13 @@ add_executable(tetrablocks
         include/tetrablocks/Constants.hpp
         include/tetrablocks/Utils.hpp
 
+        src/game/dialog/DialogPause.cpp
+        src/game/dialog/DialogEnd.cpp
         src/game/dialog/DialogQuit.cpp
         src/game/screen/ScreenGame.cpp
         src/game/screen/ScreenMain.cpp
         src/game/ui/Button.cpp
+        src/game/ShapeFactory.cpp
         src/game/Game.cpp
         src/graphics/Font.cpp
         src/graphics/Renderer.cpp
@@ -47,10 +53,7 @@ add_executable(tetrablocks
         src/model/Shape.cpp
         src/Utils.cpp
         src/main.cpp
-        include/tetrablocks/game/dialog/DialogPause.hpp
-        include/tetrablocks/game/dialog/DialogEnd.hpp
-        src/game/dialog/DialogPause.cpp
-        src/game/dialog/DialogEnd.cpp
+
 
 )
 
